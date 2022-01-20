@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "clean": "rm -rf .nuxt/ .output/",
+    "preset": "NITRO_PRESET=firebase yarn build",
+    "local": "yarn clean && yarn && yarn preset && firebase emulators:start",
+    "deploy": "yarn clean && yarn && yarn preset && firebase deploy",
+    "start": "node .output/server/index.mjs"
+  },
+  "devDependencies": {
+    "nuxt3": "latest"
+  },
+  "dependencies": {
+    "firebase-admin": "^10.0.1",
+    "firebase-functions": "^3.16.0"
+  }
+}
