@@ -4,10 +4,10 @@
       class="flex-grow flex flex-col justify-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8"
     >
       <div class="flex-shrink-0 flex justify-center">
-        <a href="/" class="inline-flex">
+        <NuxtLink to="/" class="inline-flex">
           <span class="sr-only">Atrap.io</span>
           <img class="h-12 w-auto" src="/logo.png" alt="Atrap.io - logo" />
-        </a>
+        </NuxtLink>
       </div>
       <div class="py-16">
         <div class="text-center">
