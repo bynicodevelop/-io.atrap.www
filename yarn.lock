@@ -1462,6 +1462,11 @@ agent-base@6:
   dependencies:
     debug "4"
 
+aio-vue-analytics@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/aio-vue-analytics/-/aio-vue-analytics-1.0.0.tgz#1f6417420894ebe6dfb807804837f349f5c0b326"
+  integrity sha512-F1unw6u09TESRhAY5cBQhNkcY/onRq7i2tNLcDuFYnEfe1cQHOHhR5++PAX1Jg2QlAsd95bqryVFiewAlmvnIQ==
+
 ajv-formats@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
