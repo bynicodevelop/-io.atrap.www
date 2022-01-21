@@ -5,7 +5,7 @@
       :title="paramsNotif.title"
       :subtitle="paramsNotif.subtitle"
     />
-    <div class="relative bg-white overflow-hidden">
+    <div v-track-pageview class="relative bg-white overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div
           class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32"
@@ -494,6 +494,8 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline/index.js";
 import * as yup from "yup";
 
+const { $tracker } = useNuxtApp();
+
 const schema = yup.object().shape({
   email: yup.string().email().required(),
 });
@@ -583,6 +585,8 @@ const onSubmit = async () => {
         paramsNotif.title = "Félicitations 👋";
         paramsNotif.subtitle =
           "Vous êtes maintenant inscrit à la liste d'attente. Vous recevez des nouvelles de nous prochainement.";
+
+        $tracker.lead();
       } else {
         emailError.value = true;
       }
