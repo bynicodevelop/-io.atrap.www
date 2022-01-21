@@ -1,6 +1,7 @@
 <template>
   <div>
     <slot />
+    <CookieBanner />
     <Footer />
   </div>
 </template>
