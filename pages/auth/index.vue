@@ -133,7 +133,10 @@
 </template>
 
 <script setup lang="ts">
+import { sendSignInLinkToEmail } from "@firebase/auth";
 import * as yup from "yup";
+
+const { $fire } = useNuxtApp();
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -166,6 +169,14 @@ const onSubmit = async () => {
     });
 
     if (isValid) {
+      window.localStorage.setItem("emailForSignIn", email.value);
+
+      const actionCodeSettings = {
+        url: `http://localhost:3000/`,
+        handleCodeInApp: true,
+      };
+
+      await sendSignInLinkToEmail($fire.auth, email.value, actionCodeSettings);
     }
   } catch (error) {
     console.log(error);

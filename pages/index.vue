@@ -55,6 +55,13 @@
                     class="font-medium text-gray-500 hover:text-gray-900"
                     >{{ item.name }}</a
                   >
+                  <a
+                    v-if="user"
+                    @click.prevent="$fire.logout()"
+                    href="#"
+                    class="font-medium text-indigo-600 hover:text-indigo-500"
+                    >Log out</a
+                  >
                 </div>
               </nav>
             </div>
@@ -490,11 +497,14 @@
 </template>
 
 <script setup lang="ts">
+import { signOut } from "@firebase/auth";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline/index.js";
 import * as yup from "yup";
 
-const { $tracker } = useNuxtApp();
+const { $tracker, $fire } = useNuxtApp();
+
+const user = useState("user");
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
