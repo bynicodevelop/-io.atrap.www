@@ -106,25 +106,8 @@
           </div> -->
 
           <div class="mt-6">
-            <form action="#" method="POST" class="space-y-6">
-              <div>
-                <label
-                  for="email"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  Votre email
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autocomplete="email"
-                    required=""
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
+            <form @submit.prevent="onSubmit" method="POST" class="space-y-6">
+              <InputEmail v-model="email" />
 
               <div>
                 <button
@@ -150,6 +133,12 @@
 </template>
 
 <script setup lang="ts">
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+});
+
 definePageMeta({
   layout: "",
 });
@@ -162,6 +151,30 @@ useMeta({
     class: "h-full bg-white",
   },
 });
+
+const email = ref("qsd");
+const emailError = ref(false);
+
+const isLoading = ref(false);
+
+const onSubmit = async () => {
+  isLoading.value = true;
+
+  try {
+    const isValid = await schema.isValid({
+      email: email.value,
+    });
+
+    if (isValid) {
+    }
+  } catch (error) {
+    console.log(error);
+
+    emailError.value = true;
+  }
+
+  isLoading.value = false;
+};
 </script>
 
 <style lang="css">
