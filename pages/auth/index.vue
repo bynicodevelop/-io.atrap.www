@@ -1,11 +1,20 @@
 <template>
   <div class="min-h-full flex">
+    <SimpleNotif
+      :show="paramsNotif.show"
+      :title="paramsNotif.title"
+      :subtitle="paramsNotif.subtitle"
+      :timeout="10000"
+    />
+
     <div
       class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
     >
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <img class="h-12 w-auto" src="/logo.png" alt="Workflow" />
+          <NuxtLink to="/">
+            <img class="h-12 w-auto" src="/logo.png" alt="Atrap.io" />
+          </NuxtLink>
           <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
             Connectez-vous à votre compte
           </h2>
@@ -136,6 +145,12 @@
 import { sendSignInLinkToEmail } from "@firebase/auth";
 import * as yup from "yup";
 
+const paramsNotif = reactive({
+  show: false,
+  title: "",
+  subtitle: "",
+});
+
 const { $fire } = useNuxtApp();
 
 const schema = yup.object().shape({
@@ -160,7 +175,19 @@ const emailError = ref(false);
 
 const isLoading = ref(false);
 
+const { SITE_NAME } = useRuntimeConfig();
+
+const siteName = SITE_NAME;
+const title = `Connexion - ${siteName}`;
+
+useMeta({
+  title,
+});
+
 const onSubmit = async () => {
+  paramsNotif.show = false;
+  paramsNotif.title = "";
+  paramsNotif.subtitle = "";
   isLoading.value = true;
 
   try {
@@ -177,6 +204,11 @@ const onSubmit = async () => {
       };
 
       await sendSignInLinkToEmail($fire.auth, email.value, actionCodeSettings);
+
+      paramsNotif.show = true;
+      paramsNotif.title = "Connexion à votre compte";
+      paramsNotif.subtitle =
+        "Vous venez de recevoir un email avec votre lien de connexion.";
     }
   } catch (error) {
     console.log(error);

@@ -59,6 +59,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         console.log("User is signed out.");
 
         useState("user", () => null);
+
+        const c = cookies.value;
+
+        cookies.value = <any>{ ...c, ...{ isAuthentucated: false } };
       }
     })
 
