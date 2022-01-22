@@ -47,14 +47,22 @@
                   </div>
                 </div>
                 <div class="hidden md:block md:ml-10 md:pr-4 md:space-x-8">
-                  <a
-                    @click.prevent="scrollToElement(item.href)"
-                    v-for="item in navigation"
-                    :key="item.name"
-                    :href="item.href"
-                    class="font-medium text-gray-500 hover:text-gray-900"
-                    >{{ item.name }}</a
-                  >
+                  <template v-for="item in navigation" :key="item.name">
+                    <NuxtLink
+                      v-if="!item.href.includes('#')"
+                      :to="item.href"
+                      class="font-medium text-gray-500 hover:text-gray-900"
+                      >{{ item.name }}</NuxtLink
+                    >
+
+                    <a
+                      v-if="item.href.includes('#')"
+                      @click.prevent="scrollToElement(item.href)"
+                      :href="item.href"
+                      class="font-medium text-gray-500 hover:text-gray-900"
+                      >{{ item.name }}</a
+                    >
+                  </template>
                   <a
                     v-if="user"
                     @click.prevent="$fire.logout()"
@@ -497,7 +505,6 @@
 </template>
 
 <script setup lang="ts">
-import { signOut } from "@firebase/auth";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline/index.js";
 import * as yup from "yup";
@@ -513,6 +520,7 @@ const schema = yup.object().shape({
 const navigation = [
   { name: "Présentation", href: "#getting-started" },
   { name: "S'inscrire", href: "#register" },
+  { name: "UTM Generateur", href: "/generator/utm" },
 ];
 
 const emailError = ref(false);

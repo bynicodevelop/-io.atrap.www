@@ -155,7 +155,7 @@ useMeta({
   },
 });
 
-const email = ref("qsd");
+const email = ref("");
 const emailError = ref(false);
 
 const isLoading = ref(false);
