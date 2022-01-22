@@ -345,7 +345,12 @@
 
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-import { MailIcon, MenuIcon, PhoneIcon, XIcon } from "@heroicons/vue/outline";
+import {
+  MailIcon,
+  MenuIcon,
+  PhoneIcon,
+  XIcon,
+} from "@heroicons/vue/outline/index.js";
 
 const navigation = [
   // { name: "Changelog", href: "#" }
@@ -372,6 +377,17 @@ const utmMedium = [
   "video",
   "click",
 ];
+
+const { SITE_TITLE, SITE_NAME } = useRuntimeConfig();
+
+const siteName = SITE_NAME;
+const title = `${SITE_TITLE} - ${siteName}`;
+
+useMeta({
+  title,
+  description:
+    "Générez vos URLs de tracking facilement et rapidement pour suivre vos visiteurs sur votre site Web.",
+});
 
 const url = ref("");
 const utmSourceValue = ref("");

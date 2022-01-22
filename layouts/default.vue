@@ -20,7 +20,7 @@ const siteUrl = SITE_URL;
 const siteName = SITE_NAME;
 const title = `${SITE_TITLE} - ${siteName}`;
 const description = SITE_DESCRIPTION;
-const image = `${siteUrl}/${SITE_THUMBNAIL}`;
+const image = `/${SITE_THUMBNAIL}`;
 const twitterAuthor = TWITTER_AUTHOR.replace(/^@/, "");
 
 useMeta({
@@ -28,8 +28,8 @@ useMeta({
   description,
   link: [
     { rel: "canonical", href: siteUrl },
-    { rel: "icon", href: `${siteUrl}/favicon.ico` },
-    { rel: "apple-touch-icon", href: `${siteUrl}/apple-touch-icon.png` },
+    { rel: "icon", href: `/favicon.ico` },
+    { rel: "apple-touch-icon", href: `/apple-touch-icon.png` },
   ],
   meta: [
     {
