@@ -63,6 +63,13 @@
                       >{{ item.name }}</a
                     >
                   </template>
+                  <a
+                    v-if="isAuthenticated"
+                    @click.prevent="logout"
+                    href="#"
+                    class="font-medium text-indigo-600 hover:text-indigo-500"
+                    >Log out</a
+                  >
                 </div>
               </nav>
             </div>
@@ -502,7 +509,9 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline/index.js";
 import * as yup from "yup";
 
-const { $tracker } = useNuxtApp();
+const { $tracker, $fire } = useNuxtApp();
+
+const user = useState("user");
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -520,6 +529,8 @@ const email = ref("");
 const isLoading = ref(false);
 const isStarted = ref(false);
 
+const isAuthenticated = ref(user.value !== null);
+
 const paramsNotif = reactive({
   show: false,
   title: "",
@@ -535,6 +546,19 @@ defineNuxtComponent({
     XIcon,
   },
 });
+
+const logout = async () => {
+  paramsNotif.show = false;
+  paramsNotif.title = "";
+  paramsNotif.subtitle = "";
+
+  await $fire.logout();
+
+  isAuthenticated.value = false;
+
+  paramsNotif.show = true;
+  paramsNotif.title = "Vous êtes déconnecté 👍";
+};
 
 const scrollToElement = (id: string): void => {
   const el: HTMLElement = document.getElementById(id.replace("#", ""));

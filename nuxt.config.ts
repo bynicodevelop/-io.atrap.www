@@ -15,6 +15,7 @@ export default defineNuxtConfig({
         }
       },
     },
+    serverMiddleware: [],
     publicRuntimeConfig: {
       SITE_URL: process.env.SITE_URL,
       SITE_NAME: process.env.SITE_NAME,
@@ -24,6 +25,12 @@ export default defineNuxtConfig({
       TWITTER_AUTHOR: process.env.TWITTER_AUTHOR,
       GA4_ID: process.env.GA4_ID,
       PIXEL_ID: process.env.PIXEL_ID,
+      API_KEY: process.env.API_KEY,
+      AUTH_DOMAIN: process.env.AUTH_DOMAIN,
+      PROJECT_ID: process.env.PROJECT_ID,
+      STORAGE_BUCKET: process.env.STORAGE_BUCKET,
+      MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
+      APP_ID: process.env.APP_ID,
     },
     privateRuntimeConfig: {
       NUXT_APP_MAILCHIMP_API_KEY: process.env.NUXT_APP_MAILCHIMP_API_KEY

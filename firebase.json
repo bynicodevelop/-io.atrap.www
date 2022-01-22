@@ -7,10 +7,16 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [{ "source": "**", "function": "server" }]
-    
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "server"
+      }
+    ]
   },
-  "functions": { "source": ".output/server" },
+  "functions": {
+    "source": ".output/server"
+  },
   "emulators": {
     "functions": {
       "port": 5001
@@ -20,6 +26,9 @@
     },
     "ui": {
       "enabled": true
+    },
+    "auth": {
+      "port": 9099
     }
   }
 }

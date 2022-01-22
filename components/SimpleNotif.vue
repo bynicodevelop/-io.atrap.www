@@ -66,9 +66,13 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  timeout: {
+    type: Number,
+    default: 3000,
+  },
 });
 
-const { show, title, subtitle } = toRefs(props);
+const { show, title, subtitle, timeout } = toRefs(props);
 
 const isShow = ref(false);
 
@@ -80,7 +84,7 @@ watch(isShow, (val) => {
   if (val) {
     setTimeout(() => {
       isShow.value = false;
-    }, 3000);
+    }, timeout.value);
   }
 });
 </script>

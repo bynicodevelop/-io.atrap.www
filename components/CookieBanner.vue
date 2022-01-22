@@ -55,6 +55,8 @@ const hideCookieBanner = ref(cookieConsent);
 const onClick = () => {
   hideCookieBanner.value = true;
 
-  cookies.value = <any>{ ...{ cookieConsent: hideCookieBanner } };
+  const c = cookies.value;
+
+  cookies.value = <any>{ ...c, ...{ cookieConsent: hideCookieBanner } };
 };
 </script>
