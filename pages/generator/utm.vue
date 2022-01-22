@@ -378,10 +378,10 @@ const utmMedium = [
   "click",
 ];
 
-const { SITE_TITLE, SITE_NAME } = useRuntimeConfig();
+const { SITE_NAME } = useRuntimeConfig();
 
 const siteName = SITE_NAME;
-const title = `${SITE_TITLE} - ${siteName}`;
+const title = `Générez vos URLs de tracking facilement et rapidement - ${siteName}`;
 
 useMeta({
   title,
