@@ -63,8 +63,17 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 
-const userNavigation = [
-  { name: "Mon profil", href: "#" },
-  { name: "Déconnexion", href: "/logout" },
-];
+const userNavigation = [{ name: "Déconnexion", href: "/logout" }];
+
+const { $fire } = useNuxtApp();
+
+const router = useRouter();
+
+const logout = () => {
+  $fire.logout();
+
+  router.push({
+    name: "auth",
+  });
+};
 </script>

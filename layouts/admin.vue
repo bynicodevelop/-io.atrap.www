@@ -159,7 +159,7 @@
               </button> -->
 
               <!-- Profile dropdown -->
-              <!-- <PorfileMenu /> -->
+              <ProfileAvatarMenu />
             </div>
           </div>
         </div>

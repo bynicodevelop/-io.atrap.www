@@ -145,18 +145,6 @@
 import { sendSignInLinkToEmail } from "@firebase/auth";
 import * as yup from "yup";
 
-const paramsNotif = reactive({
-  show: false,
-  title: "",
-  subtitle: "",
-});
-
-const { $fire } = useNuxtApp();
-
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-});
-
 definePageMeta({
   layout: "",
 });
@@ -170,10 +158,9 @@ useMeta({
   },
 });
 
-const email = ref("");
-const emailError = ref(false);
-
-const isLoading = ref(false);
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+});
 
 const { SITE_NAME } = useRuntimeConfig();
 
@@ -183,6 +170,19 @@ const title = `Connexion - ${siteName}`;
 useMeta({
   title,
 });
+
+const paramsNotif = reactive({
+  show: false,
+  title: "",
+  subtitle: "",
+});
+
+const { $fire } = useNuxtApp();
+
+const email = ref("");
+const emailError = ref(false);
+
+const isLoading = ref(false);
 
 const onSubmit = async () => {
   paramsNotif.show = false;
