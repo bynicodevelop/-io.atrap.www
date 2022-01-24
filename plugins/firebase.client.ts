@@ -1,8 +1,7 @@
 import { defineNuxtPlugin } from '#app'
 import { initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink, signOut } from "firebase/auth";
-import { CookieRef } from 'nuxt3/dist/app/composables/cookie';
-
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const validEmailLink = async (auth, emailLink, cookies) => {
   if (isSignInWithEmailLink(auth, emailLink)) {
@@ -18,6 +17,10 @@ const validEmailLink = async (auth, emailLink, cookies) => {
       const c = cookies.value;
 
       cookies.value = <any>{ ...c, ...{ isAuthentucated: true } };
+
+      const router = useRouter();
+
+      router.push("/adminer");
 
       console.log("User signed in with success: ", result);
     } catch (error) {
@@ -37,12 +40,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       messagingSenderId: MESSAGING_SENDER_ID,
       appId: APP_ID,
     });
-
+    
     const cookies = useCookie('__session')
     
     const auth = getAuth(firebaseApp);
+    const firestore = getFirestore(firebaseApp);
 
     connectAuthEmulator(auth, "http://localhost:9099");
+    connectFirestoreEmulator(firestore, "localhost", 8080);
 
     // Permet l'authentification pas lien de connexion
     await validEmailLink(auth, window.location.href, cookies);
@@ -70,6 +75,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       provide: {
         fire: {
           auth, 
+          firestore,
           logout: () => signOut(auth),
         }
       }

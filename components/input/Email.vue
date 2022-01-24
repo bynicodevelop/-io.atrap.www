@@ -13,9 +13,11 @@
         type="email"
         autocomplete="email"
         required=""
-        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        :class="`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+          emailError ? 'border-red-300 text-red-900' : ''
+        }`"
       />
-      <p v-if="emailError" class="mt-2 text-red-500" id="email-error">
+      <p v-if="emailError" class="mt-2 text-sm text-red-600" id="email-error">
         Merci de saisir une adresse e-mail valide.
       </p>
     </div>
@@ -23,6 +25,12 @@
 </template>
 
 <script setup lang="ts">
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+});
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -39,12 +47,6 @@ const email = computed({
   set(val) {
     emit("update:modelValue", val);
   },
-});
-
-import * as yup from "yup";
-
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
 });
 
 const emailError = ref(false);
