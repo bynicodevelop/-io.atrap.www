@@ -202,38 +202,6 @@ import {
 
 import { SearchIcon } from "@heroicons/vue/solid/index.js";
 
-const { $fire } = useNuxtApp();
-
-const projects = ref([]);
-
-onMounted(async () => {
-  const { auth, firestore } = $fire;
-
-  const projectRepository = useProjectRepository({ auth, firestore });
-
-  const user: any = await projectRepository.getCurrentUser();
-
-  if (user.uid) {
-    const { auth, firestore } = $fire;
-
-    projectRepository.getProjects((values) => (projects.value = values));
-  }
-});
-
-const user = useState("user");
-
-watch(user, (user: any) => {
-  if (user.uid) {
-    const { auth, firestore } = $fire;
-
-    const projectRepository = useProjectRepository({ auth, firestore });
-
-    projectRepository.getProjects((values) => {
-      projects.value = values;
-    });
-  }
-});
-
 useMeta({
   bodyAttrs: {
     class: "h-full",
@@ -247,15 +215,30 @@ const navigation = [
   { name: "Tableau de bord", href: "/adminer", icon: HomeIcon, current: true },
 ];
 
+const { $fire } = useNuxtApp();
+
 const router = useRouter();
+
+const projects = ref([]);
+const sidebarOpen = ref(false);
+
+onMounted(async () => {
+  const { auth, firestore } = $fire;
+
+  const projectRepository = useProjectRepository({ auth, firestore });
+
+  const user: any = await projectRepository.getCurrentUser();
+
+  if (user.uid) {
+    projectRepository.getProjects((values) => (projects.value = values));
+  }
+});
 
 watch(router.currentRoute, (to) => {
   navigation.forEach((item) => {
     item.current = item.href === to.path;
   });
 });
-
-const sidebarOpen = ref(false);
 
 const logout = async () => {
   await $fire.logout();

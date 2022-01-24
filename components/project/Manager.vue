@@ -74,11 +74,29 @@
 <script setup lang="ts">
 import { PlusIcon, DotsVerticalIcon } from "@heroicons/vue/solid";
 
+const typeViews = {
+  CREATE_PROJECT: "createProject",
+  LIST_PROJECT: "listProject",
+};
+
+const projectProperties = ref({
+  projectName: "",
+  projectDescription: "",
+  projectSlug: "",
+});
+
 const { $fire } = useNuxtApp();
 
 let projectRepository = null;
 
+const typeView = ref<string>(typeViews.CREATE_PROJECT);
 const projects = <any>ref([]);
+
+if (projects.length === 0) {
+  typeView.value = typeViews.CREATE_PROJECT;
+} else {
+  typeView.value = typeViews.LIST_PROJECT;
+}
 
 onMounted(async () => {
   const { auth, firestore } = $fire;
@@ -101,24 +119,6 @@ onMounted(async () => {
     });
   }
 });
-
-const typeViews = {
-  CREATE_PROJECT: "createProject",
-  LIST_PROJECT: "listProject",
-};
-
-const projectProperties = ref({
-  projectName: "",
-  projectDescription: "",
-});
-
-const typeView = ref(typeViews.CREATE_PROJECT);
-
-if (projects.length === 0) {
-  typeView.value = typeViews.CREATE_PROJECT;
-} else {
-  typeView.value = typeViews.LIST_PROJECT;
-}
 
 const onCreateProject = async () => {
   console.log("Create project");

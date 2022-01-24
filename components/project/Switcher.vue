@@ -75,14 +75,14 @@ import { CheckIcon, SelectorIcon } from "@heroicons/vue/solid/index.js";
 const route = useRoute();
 const router = useRouter();
 
+const selected = ref(null);
+
 const props = defineProps({
   projects: {
     type: Array,
     default: [],
   },
 });
-
-const selected = ref(null);
 
 watch(
   () => props.projects,
