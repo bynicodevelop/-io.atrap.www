@@ -44,8 +44,6 @@ const getCurrentUser = async ({auth}) => {
 } 
 
 export const useProjectRepository = ({auth, firestore}) => {
-  
-
   return {
     createProject: async (project) => await createProject({project, auth, firestore}),
     getProjects: async (cb) => await getProjects({auth, firestore}, cb),

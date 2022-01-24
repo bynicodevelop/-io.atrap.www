@@ -2,6 +2,7 @@ import { defineNuxtPlugin } from '#app'
 import { initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink, signOut } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { useFirebase } from '~~/composables/useFirebase';
 
 const validEmailLink = async (auth, emailLink, cookies) => {
   if (isSignInWithEmailLink(auth, emailLink)) {
@@ -29,25 +30,10 @@ const validEmailLink = async (auth, emailLink, cookies) => {
   }
 };
 
-export default defineNuxtPlugin(async (nuxtApp) => {  
-    const {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID} = useRuntimeConfig();
-  
-    const firebaseApp = initializeApp({
-      apiKey: API_KEY,
-      authDomain: AUTH_DOMAIN,
-      projectId: PROJECT_ID,
-      storageBucket: STORAGE_BUCKET,
-      messagingSenderId: MESSAGING_SENDER_ID,
-      appId: APP_ID,
-    });
+export default defineNuxtPlugin(async (nuxtApp) => {
+    const { auth, firestore } = useFirebase();
     
-    const cookies = useCookie('__session')
-    
-    const auth = getAuth(firebaseApp);
-    const firestore = getFirestore(firebaseApp);
-
-    connectAuthEmulator(auth, "http://localhost:9099");
-    connectFirestoreEmulator(firestore, "localhost", 8080);
+    const cookies = useCookie('__session');
 
     // Permet l'authentification pas lien de connexion
     await validEmailLink(auth, window.location.href, cookies);

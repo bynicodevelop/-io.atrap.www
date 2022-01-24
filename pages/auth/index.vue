@@ -145,31 +145,7 @@
 import { sendSignInLinkToEmail } from "@firebase/auth";
 import * as yup from "yup";
 
-definePageMeta({
-  layout: "",
-});
-
-useMeta({
-  bodyAttrs: {
-    class: "h-full",
-  },
-  htmlAttrs: {
-    class: "h-full bg-white",
-  },
-});
-
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-});
-
 const { SITE_NAME } = useRuntimeConfig();
-
-const siteName = SITE_NAME;
-const title = `Connexion - ${siteName}`;
-
-useMeta({
-  title,
-});
 
 const paramsNotif = reactive({
   show: false,
@@ -183,6 +159,27 @@ const email = ref("");
 const emailError = ref(false);
 
 const isLoading = ref(false);
+
+definePageMeta({
+  layout: "",
+});
+
+const siteName = SITE_NAME;
+const title = `Connexion - ${siteName}`;
+
+useMeta({
+  title,
+  bodyAttrs: {
+    class: "h-full",
+  },
+  htmlAttrs: {
+    class: "h-full bg-white",
+  },
+});
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+});
 
 const onSubmit = async () => {
   paramsNotif.show = false;

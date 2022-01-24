@@ -509,10 +509,6 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline/index.js";
 import * as yup from "yup";
 
-const { $tracker, $fire } = useNuxtApp();
-
-const user = useState("user");
-
 const schema = yup.object().shape({
   email: yup.string().email().required(),
 });
@@ -523,13 +519,15 @@ const navigation = [
   { name: "UTM Generateur", href: "/generator/utm" },
 ];
 
+const { $tracker, $fire } = useNuxtApp();
+
+const user = ref(null);
+const isAuthenticated = ref(false);
 const emailError = ref(false);
 const email = ref("");
 
 const isLoading = ref(false);
 const isStarted = ref(false);
-
-const isAuthenticated = ref(user.value !== null);
 
 const paramsNotif = reactive({
   show: false,
@@ -537,14 +535,14 @@ const paramsNotif = reactive({
   subtitle: "",
 });
 
-defineNuxtComponent({
-  components: {
-    Popover,
-    PopoverButton,
-    PopoverPanel,
-    MenuIcon,
-    XIcon,
-  },
+onMounted(async () => {
+  const { auth, firestore } = $fire;
+
+  const projecRepository = useProjectRepository({ auth, firestore });
+
+  user.value = await projecRepository.getCurrentUser();
+
+  isAuthenticated.value = user.value !== null;
 });
 
 const logout = async () => {
