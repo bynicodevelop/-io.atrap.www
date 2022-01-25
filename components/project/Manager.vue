@@ -1,9 +1,6 @@
 <template>
   <div class="px-8 py-6">
-    <div
-      class="grid lg:grid-cols-12 justify-items-center"
-      v-if="typeView == typeViews.LOADING"
-    >
+    <div class="grid justify-items-center" v-if="typeView == typeViews.LOADING">
       Loading...
     </div>
 

@@ -3,7 +3,8 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFirebase } from '~~/composables/useFirebase';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-  const router = useRouter();
+    const router = useRouter();
+    const cookies = useCookie('__session');
   
     const { auth, firestore } = useFirebase();
   
@@ -20,6 +21,16 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         
       } else {
         console.log("User is signed out.");
+
+        const c: any = cookies.value;
+
+        cookies.value = <any>{ ...c, ...{ isAuthenticated: false } };
+        
+        if(window.location.href.includes("adminer")) {
+          router.push({
+            name: 'auth'
+          })
+        }
       }
     })
 
