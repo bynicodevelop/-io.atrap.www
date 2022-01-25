@@ -5,7 +5,7 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 export const useFirebase = () => {
     console.log("Initializing Firebase");
     
-    const {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID} = useRuntimeConfig();
+    const {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID, SITE_URL} = useRuntimeConfig();
     
     const firebaseApp = initializeApp({
         apiKey: API_KEY,
@@ -18,10 +18,12 @@ export const useFirebase = () => {
 
     const auth = getAuth(firebaseApp);
     const firestore = getFirestore(firebaseApp);
-
-    connectAuthEmulator(auth, "http://localhost:9099");
-    connectFirestoreEmulator(firestore, "localhost", 8080);
     
+    if(window.location.hostname === 'localhost') {
+      connectAuthEmulator(auth, "http://localhost:9099");
+      connectFirestoreEmulator(firestore, "localhost", 8080);
+    }
+
     return {
         auth,
         firestore,

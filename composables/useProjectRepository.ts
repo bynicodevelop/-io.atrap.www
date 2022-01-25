@@ -1,12 +1,14 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { addDoc, collection, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import { nanoid } from 'nanoid'
+import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 7)
 
 const projectsCollection = (auth, firestore) => collection(firestore, `users/${auth.currentUser.uid}/projects`); 
 
 const createProject = async ({project: { projectName, projectDescription, projectSlug }, auth, firestore}) => {
   // TODO: Attention : si un ID existe déjà ça peut planter
-  const projectId = `${projectSlug}-${nanoid(6).toLowerCase()}`;
+  const projectId = `${projectSlug}-${nanoid().toLowerCase()}`;
   
   const docRef = doc(firestore, `users/${auth.currentUser.uid}/projects/`, projectId);
 
