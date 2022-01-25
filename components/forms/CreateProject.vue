@@ -33,6 +33,7 @@
         <div class="flex justify-end">
           <button
             v-if="!isFirstCreate"
+            @click="onCancel"
             type="button"
             class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
           >
@@ -75,7 +76,7 @@ const props = defineProps({
 const nameError = ref(false);
 const descriptionError = ref(false);
 
-const emit = defineEmits(["update:modelValue", "onSubmit"]);
+const emit = defineEmits(["update:modelValue", "onSubmit", "onCancel"]);
 
 const projectName = computed({
   get() {
@@ -125,5 +126,9 @@ const action = async () => {
       }
     });
   }
+};
+
+const onCancel = () => {
+  emit("onCancel");
 };
 </script>

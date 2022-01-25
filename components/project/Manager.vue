@@ -15,6 +15,7 @@
             :isFirstCreate="projects.length == 0"
             v-model="projectProperties"
             @onSubmit="onSumbitProject"
+            @onCancel="onCancelProject"
           />
         </div>
       </div>
@@ -109,6 +110,8 @@ onMounted(async () => {
   if (user.uid) {
     projectRepository.getProjects((values) => {
       if (values.length == 0) {
+        resetFields();
+
         typeView.value = typeViews.CREATE_PROJECT;
         return;
       }
@@ -121,17 +124,25 @@ onMounted(async () => {
 });
 
 const onCreateProject = async () => {
-  console.log("Create project");
-
   typeView.value = typeViews.CREATE_PROJECT;
 };
 
 const onSumbitProject = async (e) => {
   await projectRepository.createProject(projectProperties.value);
 
-  projectProperties.value.projectName = "";
-  projectProperties.value.projectDescription = "";
+  resetFields();
 
   typeView.value = typeViews.LIST_PROJECT;
+};
+
+const onCancelProject = () => {
+  resetFields();
+
+  typeView.value = typeViews.LIST_PROJECT;
+};
+
+const resetFields = () => {
+  projectProperties.value.projectName = "";
+  projectProperties.value.projectDescription = "";
 };
 </script>
