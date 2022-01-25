@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <ProjectManager />
-  </div>
+  <div>coucou</div>
 </template>
 
 <script setup>
 definePageMeta({
-  layout: "project-panel",
+  layout: "admin",
 });
 </script>

@@ -1,8 +1,8 @@
 import { defineNuxtPlugin } from '#app'
 import { initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink, signOut } from "firebase/auth";
-import { CookieRef } from 'nuxt3/dist/app/composables/cookie';
-
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { useFirebase } from '~~/composables/useFirebase';
 
 const validEmailLink = async (auth, emailLink, cookies) => {
   if (isSignInWithEmailLink(auth, emailLink)) {
@@ -19,6 +19,10 @@ const validEmailLink = async (auth, emailLink, cookies) => {
 
       cookies.value = <any>{ ...c, ...{ isAuthentucated: true } };
 
+      const router = useRouter();
+
+      router.push("/adminer");
+
       console.log("User signed in with success: ", result);
     } catch (error) {
       console.log("Error signing in with email link: ", error);
@@ -26,23 +30,10 @@ const validEmailLink = async (auth, emailLink, cookies) => {
   }
 };
 
-export default defineNuxtPlugin(async (nuxtApp) => {  
-    const {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID} = useRuntimeConfig();
-  
-    const firebaseApp = initializeApp({
-      apiKey: API_KEY,
-      authDomain: AUTH_DOMAIN,
-      projectId: PROJECT_ID,
-      storageBucket: STORAGE_BUCKET,
-      messagingSenderId: MESSAGING_SENDER_ID,
-      appId: APP_ID,
-    });
-
-    const cookies = useCookie('__session')
+export default defineNuxtPlugin(async (nuxtApp) => {
+    const { auth, firestore } = useFirebase();
     
-    const auth = getAuth(firebaseApp);
-
-    connectAuthEmulator(auth, "http://localhost:9099");
+    const cookies = useCookie('__session');
 
     // Permet l'authentification pas lien de connexion
     await validEmailLink(auth, window.location.href, cookies);
@@ -70,6 +61,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       provide: {
         fire: {
           auth, 
+          firestore,
           logout: () => signOut(auth),
         }
       }

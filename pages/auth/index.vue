@@ -116,7 +116,14 @@
 
           <div class="mt-6">
             <form @submit.prevent="onSubmit" method="POST" class="space-y-6">
-              <InputEmail v-model="email" />
+              <InputText
+                v-model="email"
+                inputType="email"
+                inputLabel="Votre email principal"
+                errorMessage="Merci de saisir une adresse email valide (e.g. john.doe@domain.tld)."
+                inputName="email"
+                v-model:inputError="emailError"
+              />
 
               <div>
                 <button
@@ -145,6 +152,8 @@
 import { sendSignInLinkToEmail } from "@firebase/auth";
 import * as yup from "yup";
 
+const { SITE_NAME } = useRuntimeConfig();
+
 const paramsNotif = reactive({
   show: false,
   title: "",
@@ -153,15 +162,20 @@ const paramsNotif = reactive({
 
 const { $fire } = useNuxtApp();
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-});
+const email = ref("");
+const emailError = ref(false);
+
+const isLoading = ref(false);
 
 definePageMeta({
   layout: "",
 });
 
+const siteName = SITE_NAME;
+const title = `Connexion - ${siteName}`;
+
 useMeta({
+  title,
   bodyAttrs: {
     class: "h-full",
   },
@@ -170,18 +184,8 @@ useMeta({
   },
 });
 
-const email = ref("");
-const emailError = ref(false);
-
-const isLoading = ref(false);
-
-const { SITE_NAME } = useRuntimeConfig();
-
-const siteName = SITE_NAME;
-const title = `Connexion - ${siteName}`;
-
-useMeta({
-  title,
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
 });
 
 const onSubmit = async () => {
@@ -191,28 +195,30 @@ const onSubmit = async () => {
   isLoading.value = true;
 
   try {
-    const isValid = await schema.isValid({
+    const isValid = schema.isValidSync({
       email: email.value,
     });
 
-    if (isValid) {
-      window.localStorage.setItem("emailForSignIn", email.value);
+    if (!isValid) {
+      emailError.value = true;
 
-      const actionCodeSettings = {
-        url: `http://localhost:3000/`,
-        handleCodeInApp: true,
-      };
-
-      await sendSignInLinkToEmail($fire.auth, email.value, actionCodeSettings);
-
-      paramsNotif.show = true;
-      paramsNotif.title = "Connexion à votre compte";
-      paramsNotif.subtitle =
-        "Vous venez de recevoir un email avec votre lien de connexion.";
+      return;
     }
-  } catch (error) {
-    console.log(error);
 
+    window.localStorage.setItem("emailForSignIn", email.value);
+
+    const actionCodeSettings = {
+      url: `http://localhost:3000/`,
+      handleCodeInApp: true,
+    };
+
+    await sendSignInLinkToEmail($fire.auth, email.value, actionCodeSettings);
+
+    paramsNotif.show = true;
+    paramsNotif.title = "Connexion à votre compte";
+    paramsNotif.subtitle =
+      "Vous venez de recevoir un email avec votre lien de connexion.";
+  } catch (error) {
     emailError.value = true;
   }
 
