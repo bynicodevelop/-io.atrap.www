@@ -116,7 +116,14 @@
 
           <div class="mt-6">
             <form @submit.prevent="onSubmit" method="POST" class="space-y-6">
-              <InputEmail v-model="email" />
+              <InputText
+                v-model="email"
+                inputType="email"
+                inputLabel="Votre email principal"
+                errorMessage="Merci de saisir une adresse email valide (e.g. john.doe@domain.tld)."
+                inputName="email"
+                v-model:inputError="emailError"
+              />
 
               <div>
                 <button
@@ -188,28 +195,30 @@ const onSubmit = async () => {
   isLoading.value = true;
 
   try {
-    const isValid = await schema.isValid({
+    const isValid = schema.isValidSync({
       email: email.value,
     });
 
-    if (isValid) {
-      window.localStorage.setItem("emailForSignIn", email.value);
+    if (!isValid) {
+      emailError.value = true;
 
-      const actionCodeSettings = {
-        url: `http://localhost:3000/`,
-        handleCodeInApp: true,
-      };
-
-      await sendSignInLinkToEmail($fire.auth, email.value, actionCodeSettings);
-
-      paramsNotif.show = true;
-      paramsNotif.title = "Connexion à votre compte";
-      paramsNotif.subtitle =
-        "Vous venez de recevoir un email avec votre lien de connexion.";
+      return;
     }
-  } catch (error) {
-    console.log(error);
 
+    window.localStorage.setItem("emailForSignIn", email.value);
+
+    const actionCodeSettings = {
+      url: `http://localhost:3000/`,
+      handleCodeInApp: true,
+    };
+
+    await sendSignInLinkToEmail($fire.auth, email.value, actionCodeSettings);
+
+    paramsNotif.show = true;
+    paramsNotif.title = "Connexion à votre compte";
+    paramsNotif.subtitle =
+      "Vous venez de recevoir un email avec votre lien de connexion.";
+  } catch (error) {
     emailError.value = true;
   }
 

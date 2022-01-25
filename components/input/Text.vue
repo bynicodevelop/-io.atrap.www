@@ -13,9 +13,10 @@
         @focus="onFocus"
         @blur="onBlur"
         v-model="valueModel"
-        type="text"
-        name="project-name"
-        id="project-name"
+        :placeholder="props.inputPlaceholder || props.inputLabel"
+        :type="props.inputType"
+        :name="props.inputName"
+        :id="props.inputId || props.inputName"
         :class="`block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md ${
           props.inputError ? 'border-red-300 text-red-900' : ''
         }`"
@@ -38,6 +39,11 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: "",
+    required: true,
+  },
+  inputPlaceholder: {
+    type: String,
+    default: "",
   },
   inputError: {
     type: Boolean,
@@ -52,6 +58,19 @@ const props = defineProps({
     default: "",
   },
   inputLabel: {
+    type: String,
+    default: "",
+  },
+  inputType: {
+    type: String,
+    default: "text",
+  },
+  inputName: {
+    type: String,
+    default: "",
+    required: true,
+  },
+  inputId: {
     type: String,
     default: "",
   },

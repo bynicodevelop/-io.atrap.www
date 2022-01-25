@@ -14,6 +14,7 @@
 
         <InputText
           v-model="projectName"
+          inputName="project-name"
           inputLabel="Nom du projet"
           errorMessage="Merci de saisir un nom de projet (e.g. Mon site web)."
           helpMessage="Saisissez un nom de projet (e.g. Mon site web)."
@@ -22,6 +23,7 @@
 
         <InputTextarea
           v-model="projectDescription"
+          inputName="project-description"
           inputLabel="Description du projet"
           errorMessage="Merci de saisir une description (e.g. Mise en place d'une campagne de visibilité)."
           helpMessage="Saisissez une description (e.g. Mise en place d'une campagne de visibilité)."

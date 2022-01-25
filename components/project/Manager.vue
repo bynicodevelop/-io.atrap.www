@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { PlusIcon, DotsVerticalIcon } from "@heroicons/vue/solid";
+import { PlusIcon, DotsVerticalIcon } from "@heroicons/vue/solid/index.js";
 
 const typeViews = {
   CREATE_PROJECT: "createProject",
