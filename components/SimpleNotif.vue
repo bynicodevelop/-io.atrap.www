@@ -20,7 +20,14 @@
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <CheckCircleIcon
+                  v-if="type == 'info'"
                   class="h-6 w-6 text-green-400"
+                  aria-hidden="true"
+                />
+
+                <ExclamationCircleIcon
+                  v-if="type == 'error'"
+                  class="h-6 w-6 text-red-400"
                   aria-hidden="true"
                 />
               </div>
@@ -50,7 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { CheckCircleIcon } from "@heroicons/vue/outline/index.js";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/vue/outline/index.js";
 import { XIcon } from "@heroicons/vue/solid/index.js";
 
 const props = defineProps({
@@ -66,13 +76,17 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  type: {
+    type: String,
+    default: "info",
+  },
   timeout: {
     type: Number,
     default: 3000,
   },
 });
 
-const { show, title, subtitle, timeout } = toRefs(props);
+const { show, title, subtitle, timeout, type } = toRefs(props);
 
 const isShow = ref(false);
 

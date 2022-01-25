@@ -102,7 +102,7 @@ onMounted(async () => {
   const { auth, firestore } = $fire;
 
   projectRepository = useProjectRepository({ auth, firestore });
-  const userRepository = useUserRepository({ auth, firestore });
+  const userRepository = useUserRepository({ auth });
 
   const user = <{ uid: string }>await userRepository.getCurrentUser();
 

@@ -215,14 +215,14 @@ const navigation = [
   { name: "Tableau de bord", href: "/adminer", icon: HomeIcon, current: true },
 ];
 
-const { $fire } = useNuxtApp();
-
 const router = useRouter();
 
 const projects = ref([]);
 const sidebarOpen = ref(false);
 
 onMounted(async () => {
+  const { $fire } = useNuxtApp();
+
   const { auth, firestore } = $fire;
 
   const projectRepository = useProjectRepository({ auth, firestore });

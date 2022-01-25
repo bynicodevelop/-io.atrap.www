@@ -17,16 +17,16 @@
             <img class="h-12 w-auto" src="/logo.png" alt="Atrap.io" />
           </NuxtLink>
           <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-            Connectez-vous à votre compte
+            Créez-vous un compte
           </h2>
           <p class="mt-2 text-sm text-gray-600">
             Ou
             {{ " " }}
             <NuxtLink
-              to="/auth/register"
+              to="/auth"
               class="font-medium text-indigo-600 hover:text-indigo-500"
             >
-              créer un compte.
+              connectez-vous.
             </NuxtLink>
           </p>
         </div>
@@ -160,10 +160,9 @@
 
 <script setup lang="ts">
 import { sendSignInLinkToEmail } from "@firebase/auth";
-import { useCookie } from "nuxt3";
 import * as yup from "yup";
 
-const { SITE_NAME, SITE_URL } = useRuntimeConfig();
+const { SITE_NAME } = useRuntimeConfig();
 
 const paramsNotif = reactive({
   show: false,
@@ -242,19 +241,18 @@ const onSubmit = async () => {
       return;
     }
 
-    await userRepository.defaultSignIn(email.value, password.value);
+    await userRepository.createAccount(email.value, password.value);
 
     router.push({
       name: "adminer",
     });
   } catch (error) {
-    console.log(error);
-
     if (!error.errors) {
-      if (error.message === "user-not-found") {
+      if (error.message === "email-already-in-use") {
         paramsNotif.show = true;
         paramsNotif.title = "Erreur";
-        paramsNotif.subtitle = "Vos identifiants ne sont pas corrects.";
+        paramsNotif.subtitle =
+          "Vous ne pouvez pas créer de compte avec ces identifiants.";
         paramsNotif.type = "error";
       }
     } else {

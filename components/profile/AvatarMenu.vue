@@ -69,8 +69,12 @@ const { $fire } = useNuxtApp();
 
 const router = useRouter();
 
-const logout = () => {
-  $fire.logout();
+const logout = async () => {
+  const { auth } = $fire;
+
+  const userRespository = useUserRepository({ auth });
+
+  await userRespository.logout();
 
   router.push({
     name: "auth",

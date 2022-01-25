@@ -54,8 +54,8 @@ import slugify from "slugify";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
-  projectName: yup.string().required("project_name"),
-  projectDescription: yup.string().required("project_description"),
+  projectName: yup.string().required("name_field"),
+  projectDescription: yup.string().required("description_field"),
 });
 
 const props = defineProps(["modelValue"]);
@@ -104,11 +104,11 @@ const action = async () => {
     emit("onSubmit");
   } catch (error) {
     error.errors.forEach((error) => {
-      if (error === "project_name") {
+      if (error === "name_field") {
         nameError.value = true;
       }
 
-      if (error === "project_description") {
+      if (error === "description_field") {
         descriptionError.value = true;
       }
     });

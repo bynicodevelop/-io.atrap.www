@@ -3,10 +3,11 @@
   "scripts": {
     "dev": "cp .env.development .env && nuxi dev",
     "build": "nuxi build",
-    "clean": "rm -rf .nuxt/ .output/ node_modules/",
+    "clean": "rm -rf .nuxt/ .output/ node_modules/ .firebase/",
     "preset": "NITRO_PRESET=firebase yarn build",
     "local": "cp .env.development .env && yarn clean && yarn && yarn preset && firebase emulators:start",
     "deploy": "cp .env.production .env && yarn clean && yarn && yarn preset && firebase deploy",
+    "emulator": "firebase emulators:start",
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
