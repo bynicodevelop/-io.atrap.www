@@ -4,11 +4,11 @@
       <div class="space-y-6">
         <div>
           <h1 class="text-lg leading-6 font-medium text-gray-900">
-            Project Settings
+            Créer un projet
           </h1>
           <p class="mt-1 text-sm text-gray-500">
-            Let’s get started by filling in the information below to create your
-            new project.
+            Commencez par remplir les informations ci-dessous pour créer votre
+            nouveau projet.
           </p>
         </div>
 
