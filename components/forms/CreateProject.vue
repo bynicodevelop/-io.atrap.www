@@ -32,6 +32,7 @@
 
         <div class="flex justify-end">
           <button
+            v-if="!isFirstCreate"
             type="button"
             class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
           >
@@ -58,7 +59,18 @@ const schema = yup.object().shape({
   projectDescription: yup.string().required("description_field"),
 });
 
-const props = defineProps(["modelValue"]);
+const props = defineProps({
+  modelValue: {
+    default: () => ({
+      projectName: "",
+      projectDescription: "",
+    }),
+    required: true,
+  },
+  isFirstCreate: {
+    default: false,
+  },
+});
 
 const nameError = ref(false);
 const descriptionError = ref(false);

@@ -1,5 +1,12 @@
 <template>
   <div class="px-8 py-6">
+    <div
+      class="grid lg:grid-cols-12 justify-items-center"
+      v-if="typeView == typeViews.LOADING"
+    >
+      Loading...
+    </div>
+
     <!-- Create Projects -->
     <div class="grid lg:grid-cols-12">
       <div
@@ -8,6 +15,7 @@
       >
         <div class="px-4 py-5 sm:p-6">
           <FormsCreateProject
+            :isFirstCreate="projects.length == 0"
             v-model="projectProperties"
             @onSubmit="onSumbitProject"
           />
@@ -18,7 +26,7 @@
     <ul
       role="list"
       class="grid grid-cols-1 sm:grid-cols-4 gap-4"
-      v-if="typeView != typeViews.CREATE_PROJECT"
+      v-if="typeView == typeViews.LIST_PROJECT"
     >
       <li
         @click="onCreateProject"
@@ -75,6 +83,7 @@
 import { PlusIcon, DotsVerticalIcon } from "@heroicons/vue/solid/index.js";
 
 const typeViews = {
+  LOADING: "loading",
   CREATE_PROJECT: "createProject",
   LIST_PROJECT: "listProject",
 };
@@ -89,14 +98,8 @@ const { $fire } = useNuxtApp();
 
 let projectRepository = null;
 
-const typeView = ref<string>(typeViews.CREATE_PROJECT);
+const typeView = ref<string>(typeViews.LOADING);
 const projects = <any>ref([]);
-
-if (projects.length === 0) {
-  typeView.value = typeViews.CREATE_PROJECT;
-} else {
-  typeView.value = typeViews.LIST_PROJECT;
-}
 
 onMounted(async () => {
   const { auth, firestore } = $fire;
@@ -112,7 +115,10 @@ onMounted(async () => {
         typeView.value = typeViews.CREATE_PROJECT;
         return;
       }
+
       projects.value = values;
+
+      typeView.value = typeViews.LIST_PROJECT;
     });
   }
 });
@@ -124,11 +130,11 @@ const onCreateProject = async () => {
 };
 
 const onSumbitProject = async (e) => {
-  typeView.value = typeViews.LIST_PROJECT;
-
-  projectRepository.createProject(projectProperties.value);
+  await projectRepository.createProject(projectProperties.value);
 
   projectProperties.value.projectName = "";
   projectProperties.value.projectDescription = "";
+
+  typeView.value = typeViews.LIST_PROJECT;
 };
 </script>
