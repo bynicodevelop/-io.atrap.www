@@ -152,7 +152,7 @@
 import { sendSignInLinkToEmail } from "@firebase/auth";
 import * as yup from "yup";
 
-const { SITE_NAME } = useRuntimeConfig();
+const { SITE_NAME, SITE_URL } = useRuntimeConfig();
 
 const paramsNotif = reactive({
   show: false,
@@ -208,7 +208,7 @@ const onSubmit = async () => {
     window.localStorage.setItem("emailForSignIn", email.value);
 
     const actionCodeSettings = {
-      url: `http://localhost:3000/`,
+      url: SITE_URL,
       handleCodeInApp: true,
     };
 

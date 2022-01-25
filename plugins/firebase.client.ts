@@ -17,7 +17,7 @@ const validEmailLink = async (auth, emailLink, cookies) => {
 
       const c = cookies.value;
 
-      cookies.value = <any>{ ...c, ...{ isAuthentucated: true } };
+      cookies.value = <any>{ ...c, ...{ isAuthenticatedted: true } };
 
       const router = useRouter();
 
@@ -53,7 +53,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
         const c = cookies.value;
 
-        cookies.value = <any>{ ...c, ...{ isAuthentucated: false } };
+        cookies.value = <any>{ ...c, ...{ isAuthenticatedted: false } };
       }
     })
 
