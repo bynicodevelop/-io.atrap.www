@@ -102,14 +102,11 @@ onMounted(async () => {
   const { auth, firestore } = $fire;
 
   projectRepository = useProjectRepository({ auth, firestore });
+  const userRepository = useUserRepository({ auth, firestore });
 
-  const user = await projectRepository.getCurrentUser();
+  const user = <{ uid: string }>await userRepository.getCurrentUser();
 
   if (user.uid) {
-    const { auth, firestore } = $fire;
-
-    projectRepository = useProjectRepository({ auth, firestore });
-
     projectRepository.getProjects((values) => {
       if (values.length == 0) {
         typeView.value = typeViews.CREATE_PROJECT;

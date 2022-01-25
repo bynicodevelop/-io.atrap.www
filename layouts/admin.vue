@@ -226,8 +226,9 @@ onMounted(async () => {
   const { auth, firestore } = $fire;
 
   const projectRepository = useProjectRepository({ auth, firestore });
+  const userRespository = useUserRepository({ auth, firestore });
 
-  const user: any = await projectRepository.getCurrentUser();
+  const user = <{ uid: string }>await userRespository.getCurrentUser();
 
   if (user.uid) {
     projectRepository.getProjects((values) => (projects.value = values));

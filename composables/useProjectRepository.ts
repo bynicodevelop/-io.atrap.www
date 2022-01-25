@@ -36,19 +36,9 @@ const getProjects = async ({auth, firestore}, cb) => {
   });
 };
 
-const getCurrentUser = async ({auth}) => {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      resolve(user);
-      unsubscribe();
-    }, reject);
-  });
-} 
-
 export const useProjectRepository = ({auth, firestore}) => {
   return {
     createProject: async (project) => await createProject({project, auth, firestore}),
     getProjects: async (cb) => await getProjects({auth, firestore}, cb),
-    getCurrentUser: async () => await getCurrentUser({auth}),
   }
 }
