@@ -1,6 +1,7 @@
 <template>
   <div>
     <label
+      v-if="props.inputLabel"
       for="project-name"
       :class="`block text-sm font-medium text-gray-700 ${
         props.inputError ? 'text-red-600' : ''

@@ -200,7 +200,7 @@ import {
   XIcon,
 } from "@heroicons/vue/outline/index.js";
 
-import { SearchIcon } from "@heroicons/vue/solid/index.js";
+import { SearchIcon, AdjustmentsIcon } from "@heroicons/vue/solid/index.js";
 
 useMeta({
   bodyAttrs: {
@@ -211,9 +211,27 @@ useMeta({
   },
 });
 
+const route = useRoute();
+
 const navigation = [
-  { name: "Tableau de bord", href: "/adminer", icon: HomeIcon, current: true },
+  {
+    pathName: "adminer-projects-projectid",
+    name: "Tableau de bord",
+    href: `/adminer/projects/${route.params["projectid"]}`,
+    icon: HomeIcon,
+    current: true,
+  },
+  {
+    pathName: "adminer-projects-projectid-settings",
+    name: "Paramètres",
+    href: `/adminer/projects/${route.params["projectid"]}/settings`,
+    icon: AdjustmentsIcon,
+  },
 ];
+
+for (let i = 0; i < navigation.length; i++) {
+  navigation[i].current = navigation[i].pathName === route.name;
+}
 
 const router = useRouter();
 
