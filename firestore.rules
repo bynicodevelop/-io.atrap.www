@@ -8,5 +8,11 @@ service cloud.firestore {
     match /users/{userId}/projects/{document=**} {
       allow create, update, list, get: if request.auth.uid == userId;
     }
+
+    match /users/{userId}/projects/{projectId}/socials/{document=**} {
+      allow update, create: if request.auth.uid == userId;
+    }
   }
 }
+
+// http://localhost:3000/adminer/projects/nico-develop-ennalg5/settings?accessToken=1464622437803466763-OdVwYqyuGZPZMJLOXJoLe7ftIGYsMF&accessSecret=26HFCDBFdyG7JyR99B0ZHmvF5HEVoQCIGxfzAeJ4IB38o&userId=1464622437803466763&screenName=byutweat&profile_image_url=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1464628742811275268%2FAhGS6AJE_normal.jpg&name=utweat?accessToken=1464622437803466763-OdVwYqyuGZPZMJLOXJoLe7ftIGYsMF&accessSecret=26HFCDBFdyG7JyR99B0ZHmvF5HEVoQCIGxfzAeJ4IB38o&userId=1464622437803466763&screenName=byutweat&profile_image_url=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1464628742811275268%2FAhGS6AJE_normal.jpg&name=utweat#social-connect

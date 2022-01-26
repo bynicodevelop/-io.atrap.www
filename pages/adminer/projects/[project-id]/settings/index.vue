@@ -35,7 +35,6 @@
               <div class="border-b border-gray-200">
                 <nav class="-mb-px flex space-x-8">
                   <a
-                    @click="onSelectTab(tab)"
                     v-for="tab in tabs"
                     :key="tab.name"
                     :href="tab.href"
@@ -54,12 +53,12 @@
 
             <div class="mt-10 divide-y divide-gray-200">
               <SettingsTabsGeneral
-                v-if="tabSelected.name == 'General'"
+                v-if="tabSelected.href == '#general'"
                 v-model="project"
                 @onUpdate="onUpdate"
               />
               <SettingsTabsSocialConnect
-                v-if="tabSelected.name == 'Connexion social'"
+                v-if="tabSelected.href == '#social-connect'"
               />
             </div>
           </div>
@@ -70,34 +69,69 @@
 </template>
 
 <script setup lang="ts">
+const { SITE_URL } = useRuntimeConfig();
+
 definePageMeta({
   layout: "admin",
 });
 
 const { $fire } = useNuxtApp();
 const route = useRoute();
-
-const { auth, firestore } = $fire;
-
-const { projectid } = route.params;
-
-const projectRepository = useProjectRepository({ auth, firestore });
+const cookies = useCookie("__session");
 
 const tabs = [
-  { name: "General", href: "#", current: true },
-  { name: "Connexion social", href: "#", current: false },
+  { name: "General", href: "#general", current: true },
+  { name: "Connexion social", href: "#social-connect", current: false },
 ];
 
-const { data } = await useAsyncData("project", async () => {
-  return await projectRepository.getProject(projectid);
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+}
+
+const project = ref<Project>({
+  id: null,
+  name: null,
+  description: null,
 });
+
+const loadData = async () => {
+  const { auth, firestore } = $fire;
+
+  const { projectid } = route.params;
+
+  const projectRepository = useProjectRepository({ auth, firestore });
+
+  const projectData = await projectRepository.getProject(projectid);
+
+  project.value = {
+    id: projectData.id,
+    name: projectData.name,
+    description: projectData.description,
+  };
+
+  return projectData;
+};
+
+const { hash } = route;
 
 const tabSelected = ref(tabs[0]);
 
-const project = reactive({
-  id: data.value.id,
-  name: data.value.name,
-  description: data.value.description,
+await useAsyncData("project", async () => {
+  console.log("useAsyncData");
+
+  return loadData();
+});
+
+await onMounted(async () => {
+  console.log("onMounted");
+
+  onSelectIndex();
+
+  if (project.value.id == null) {
+    loadData();
+  }
 });
 
 const paramsNotif = reactive({
@@ -106,14 +140,22 @@ const paramsNotif = reactive({
   subtitle: "",
 });
 
-watch(tabSelected, (value) => {
+watch(route, (value) => {
+  const { hash } = value;
+
   tabs.forEach((t) => {
-    t.current = t.name == value.name;
+    t.current = t.href == hash;
   });
+
+  tabSelected.value = tabs.find((t) => t.current);
 });
 
-const onSelectTab = (tab: any) => {
-  tabSelected.value = tab;
+const onSelectIndex = () => {
+  tabs.forEach((t) => {
+    t.current = t.href == (hash || "#general");
+  });
+
+  tabSelected.value = tabs.find((t) => t.current);
 };
 
 const onUpdate = async () => {
