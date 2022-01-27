@@ -166,9 +166,13 @@
 
         <main class="flex-1">
           <div class="h-full">
-            <!-- Replace with your content -->
-            <slot />
-            <!-- /End replace -->
+            <div class="relative max-w-4xl mx-auto md:px-8 xl:px-0">
+              <div class="pt-10 pb-16">
+                <!-- Replace with your content -->
+                <slot />
+                <!-- /End replace -->
+              </div>
+            </div>
           </div>
         </main>
       </div>
@@ -198,6 +202,7 @@ import {
   MenuAlt2Icon,
   UsersIcon,
   XIcon,
+  PencilAltIcon,
 } from "@heroicons/vue/outline/index.js";
 
 import { SearchIcon, AdjustmentsIcon } from "@heroicons/vue/solid/index.js";
@@ -220,6 +225,12 @@ const navigation = [
     href: `/adminer/projects/${route.params["projectid"]}`,
     icon: HomeIcon,
     current: true,
+  },
+  {
+    pathName: "adminer-projects-projectid-editors-tweets",
+    name: "Tweet editor",
+    href: `/adminer/projects/${route.params["projectid"]}/editors/tweets`,
+    icon: PencilAltIcon,
   },
   {
     pathName: "adminer-projects-projectid-settings",
