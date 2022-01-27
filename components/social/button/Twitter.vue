@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <span class="flex-grow">
     <button
-      :disabled="isTwitterLoading || props.connectorIsset"
+      :disabled="isTwitterLoading || hasTwitterConnector"
       @click="onTwitterConnect"
       type="button"
       :class="`inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-twitter-blue-500 bg-twitter-blue-500 hover:bg-twitter-blue-600 ${
-        isTwitterLoading || props.connectorIsset
+        isTwitterLoading || hasTwitterConnector
           ? 'opacity-50 cursor-not-allowed'
           : ''
       }`"
@@ -22,14 +22,26 @@
       </svg>
       Connecter Twitter
     </button>
-  </div>
+  </span>
+  <span
+    v-if="hasTwitterConnector"
+    class="ml-4 flex-shrink-0 grid content-center"
+  >
+    <button
+      @click="onRevokeConnector('twitter')"
+      type="button"
+      class="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+    >
+      Révoquer la connexion
+    </button>
+  </span>
 </template>
 
 <script setup lang="ts">
 const props = defineProps({
-  connectorIsset: {
-    type: Boolean,
-    default: false,
+  connector: {
+    type: Object,
+    default: null,
   },
 });
 
@@ -43,11 +55,23 @@ const socialConnectCookie = useCookie<{
 
 const { SITE_URL } = useRuntimeConfig();
 
+const { $fire } = useNuxtApp();
+
+const router = useRouter();
 const route = useRoute();
 
 const emits = defineEmits(["onTwitterConnect"]);
 
 const isTwitterLoading = ref(false);
+
+const hasTwitterConnector = ref(false);
+
+watch(
+  () => props.connector,
+  (value) => {
+    hasTwitterConnector.value = !!props.connector;
+  }
+);
 
 const onTwitterConnect = async (): Promise<void> => {
   isTwitterLoading.value = true;
@@ -65,4 +89,76 @@ const onTwitterConnect = async (): Promise<void> => {
 
   window.location.href = url;
 };
+
+const onCheckTwitterConnect = async (
+  { accessSecret, accessToken, name, profile_image_url, screenName, userId },
+  projectid,
+  socialConnectRepository
+): Promise<void> => {
+  try {
+    await socialConnectRepository.setTwitterConnect({
+      accessSecret,
+      accessToken,
+      name,
+      profileImageUrl: profile_image_url,
+      screenName,
+      userId,
+      projectId: projectid,
+    });
+
+    console.log("Twitter connect success");
+
+    redirectAfterSave();
+
+    hasTwitterConnector.value = true;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const redirectAfterSave = () => {
+  const hash = route.hash;
+  router.push({
+    query: {},
+    hash,
+  });
+};
+
+const onRevokeConnector = async (connectorName: string) => {
+  const { projectid } = route.params;
+
+  const { auth, firestore } = $fire;
+
+  const socialConnectRepository = useSocialConnectRepository({
+    auth,
+    firestore,
+  });
+
+  if (connectorName === "twitter") {
+    await socialConnectRepository.revokeTwitterConnect(projectid);
+
+    hasTwitterConnector.value = false;
+  }
+};
+
+await onMounted(async () => {
+  hasTwitterConnector.value = !!props.connector;
+
+  const { projectid } = route.params;
+
+  const { auth, firestore } = $fire;
+
+  const socialConnectRepository = useSocialConnectRepository({
+    auth,
+    firestore,
+  });
+
+  if (!hasTwitterConnector.value && Object.keys(route.query).length > 0) {
+    await onCheckTwitterConnect(
+      route.query,
+      projectid,
+      socialConnectRepository
+    );
+  }
+});
 </script>

@@ -22,24 +22,10 @@
             Associer un compte Twitter
           </dt>
           <dd class="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <span class="flex-grow">
-              <SocialButtonTwitter
-                :connectorIsset="hasTwitterConnector"
-                @onTwitterConnect="onTwitterConnect"
-              />
-            </span>
-            <span
-              v-if="hasTwitterConnector"
-              class="ml-4 flex-shrink-0 grid content-center"
-            >
-              <button
-                @click="onRevokeConnector('twitter')"
-                type="button"
-                class="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-              >
-                Révoquer la connexion
-              </button>
-            </span>
+            <SocialButtonTwitter
+              :connector="twitterConnector"
+              @onTwitterConnect="onTwitterConnect"
+            />
           </dd>
         </div>
       </dl>
@@ -53,14 +39,14 @@ const route = useRoute();
 
 const { $fire } = useNuxtApp();
 
-const hasTwitterConnector = ref(false);
-
 const props = defineProps({
   modelValue: {
     type: Object,
     required: true,
   },
 });
+
+const twitterConnector = ref(null);
 
 const paramsNotif = ref({
   show: false,
@@ -76,13 +62,15 @@ const onTwitterConnect = (): void => {
   };
 };
 
-const redirectAfterSave = () => {
-  const hash = route.hash;
-  router.push({
-    query: {},
-    hash,
-  });
-};
+if (props.modelValue.id !== null) {
+  const { connectors } = props.modelValue;
+
+  for (const connector of connectors) {
+    if (connector.id === "twitter") {
+      twitterConnector.value = connector;
+    }
+  }
+}
 
 watch(
   () => props.modelValue,
@@ -91,66 +79,9 @@ watch(
 
     for (const connector of connectors) {
       if (connector.id === "twitter") {
-        hasTwitterConnector.value = true;
+        twitterConnector.value = connector;
       }
     }
   }
 );
-
-await onMounted(async () => {
-  const {
-    accessSecret,
-    accessToken,
-    name,
-    profile_image_url,
-    screenName,
-    userId,
-  } = route.query;
-
-  const { projectid } = route.params;
-
-  const { auth, firestore } = $fire;
-
-  const socialConnectRepository = useSocialConnectRepository({
-    auth,
-    firestore,
-  });
-
-  try {
-    await socialConnectRepository.setTwitterConnect({
-      accessSecret,
-      accessToken,
-      name,
-      profileImageUrl: profile_image_url,
-      screenName,
-      userId,
-      projectId: projectid,
-    });
-
-    console.log("Twitter connect success");
-
-    redirectAfterSave();
-
-    hasTwitterConnector.value = true;
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-const onRevokeConnector = async (connectorName: string) => {
-  const { projectid } = route.params;
-
-  const { auth, firestore } = $fire;
-
-  const socialConnectRepository = useSocialConnectRepository({
-    auth,
-    firestore,
-  });
-
-  if (connectorName === "twitter") {
-    await socialConnectRepository.revokeTwitterConnect(projectid);
-
-    hasTwitterConnector.value = false;
-  }
-};
 </script>

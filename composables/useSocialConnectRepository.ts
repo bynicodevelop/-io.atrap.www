@@ -1,20 +1,17 @@
 import { collection, deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { TwitterConnecterInteface, TwitterConnectModel } from "~~/models/TwitterConnectModel";
-import { isEmpty } from "lodash";
+import { isEmpty, isUndefined } from "lodash";
 
 const isValidTwitterConnect = (data: TwitterConnecterInteface) => {
-    if (isEmpty(data.accessSecret)
-        || isEmpty(data.accessToken)
-        || isEmpty(data.userId)
-        || isEmpty(data.screenName)
-        || isEmpty(data.profileImageUrl)
-        || isEmpty(data.name)) {
+    let isValid = true
 
-        return false;
-    }
+    Object.keys(data).forEach(key => {
+        if (isUndefined(data[key]) || isEmpty(data[key])) {
+            isValid = false;
+        }
+    })
 
-
-    return true;
+    return isValid;
 }
 
 const setTwitterConnect = async ({ auth, firestore }, data: TwitterConnecterInteface): Promise<void> => {
@@ -30,7 +27,11 @@ const setTwitterConnect = async ({ auth, firestore }, data: TwitterConnecterInte
 
     const docRef = doc(colRef, "twitter");
 
-    await setDoc(docRef, twitterConnectModel.toJsonToSave());
+    try {
+        await setDoc(docRef, twitterConnectModel.toJsonToSave());
+    } catch (error) {
+        throw new Error("set twitter connect error");
+    }
 }
 
 const revokeTwitterConnect = async ({ auth, firestore }, projectId: string): Promise<void> => {
