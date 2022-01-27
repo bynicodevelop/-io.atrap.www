@@ -55,7 +55,7 @@
           <NuxtLink
             :to="{
               name: 'adminer-projects-projectid-editors-tweets-id',
-              params: { id: 1 },
+              params: { id: tweet.id },
             }"
             class="block hover:bg-gray-50"
           >
@@ -66,9 +66,17 @@
                 </p>
                 <div class="ml-2 flex-shrink-0 flex">
                   <p
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                    :class="`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  ${
+                      !tweet.status
+                        ? 'bg-orange-100 text-orange-800'
+                        : 'bg-green-100 text-green-800'
+                    }`"
                   >
-                    {{ tweet.status }}
+                    {{
+                      !tweet.status
+                        ? "Plannification en cours..."
+                        : tweet.status
+                    }}
                   </p>
                 </div>
               </div>
@@ -99,7 +107,7 @@
                     Créé
                     {{ " " }}
                     <time :datetime="tweet.createdAt">{{
-                      tweet.createdAt
+                      dateHumanize(tweet.createdAt)
                     }}</time>
                   </p>
                 </div>
@@ -124,16 +132,19 @@ import {
   ClockIcon,
 } from "@heroicons/vue/solid/index.js";
 
-import spin from "@bob6664569/content-spinner";
 import * as dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
+
+const { $fire } = useNuxtApp();
 
 dayjs.extend(relativeTime);
 
 definePageMeta({
   layout: "admin",
 });
+
+const route = useRoute();
 
 const openPlanner = ref(false);
 const content = ref("");
@@ -142,31 +153,44 @@ const date = ref(null);
 const tweets = ref([]);
 const loading = ref(false);
 
-const onSend = () => {
+onMounted(async () => {
+  const { auth, firestore } = $fire;
+
+  const { projectid } = route.params;
+
+  const tweetRepository = useTweetRepository({ auth, firestore });
+
+  await tweetRepository.getTweets(projectid, (data) => {
+    tweets.value = data;
+  });
+});
+
+const onSend = async () => {
   loading.value = true;
-  const list = [];
 
-  while (list.length < possibilities.value) {
-    const tweetContent = spin(content.value);
+  const { auth, firestore } = $fire;
 
-    if (list.includes(tweetContent)) {
-      continue;
-    }
+  const { projectid } = route.params;
 
-    list.push(tweetContent);
-  }
+  const tweetRepository = useTweetRepository({ auth, firestore });
 
-  tweets.value.push({
+  await tweetRepository.createTweet({
+    projectId: projectid,
     content: content.value,
-    status: "En cours",
     possibilities: possibilities.value,
-    createdAt: dayjs().locale("fr").from(dayjs()),
-    date: date.value,
-    tweets: list,
+    startSend: date.value[0],
+    endSend: date.value[1],
   });
 
-  content.value = "";
+  loading.value = false;
+  openPlanner.value = false;
 
-  console.log(content.value, possibilities.value, tweets.value);
+  content.value = "";
+  possibilities.value = 0;
+  date.value = null;
+};
+
+const dateHumanize = (date) => {
+  return dayjs.unix(date).locale("fr").fromNow();
 };
 </script>
