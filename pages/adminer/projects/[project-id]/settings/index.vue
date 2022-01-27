@@ -59,6 +59,7 @@
               />
               <SettingsTabsSocialConnect
                 v-if="tabSelected.href == '#social-connect'"
+                v-model="project"
               />
             </div>
           </div>
@@ -109,6 +110,7 @@ const loadData = async () => {
     id: projectData.id,
     name: projectData.name,
     description: projectData.description,
+    connectors: projectData.connectors,
   };
 
   return projectData;

@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { TwitterConnecterInteface, TwitterConnectModel } from "~~/models/TwitterConnectModel";
 import { isEmpty } from "lodash";
 
@@ -20,10 +20,8 @@ const isValidTwitterConnect = (data: TwitterConnecterInteface) => {
 const setTwitterConnect = async ({ auth, firestore }, data: TwitterConnecterInteface): Promise<void> => {
     const { projectId, accessToken, accessSecret, userId, screenName, profileImageUrl, name } = data;
 
-
     if (!isValidTwitterConnect(data)) {
         throw new Error("invalid twitter connect data");
-
     }
 
     const twitterConnectModel = TwitterConnectModel.formJson(<TwitterConnecterInteface>{ accessToken, accessSecret, userId, screenName, profileImageUrl, name });
@@ -32,12 +30,19 @@ const setTwitterConnect = async ({ auth, firestore }, data: TwitterConnecterInte
 
     const docRef = doc(colRef, "twitter");
 
-    await setDoc(docRef, twitterConnectModel.toJson());
+    await setDoc(docRef, twitterConnectModel.toJsonToSave());
+}
+
+const revokeTwitterConnect = async ({ auth, firestore }, projectId: string): Promise<void> => {
+    const docRef = doc(firestore, `users/${auth.currentUser.uid}/projects/${projectId}/socials`, 'twitter');
+
+    await deleteDoc(docRef);
 }
 
 export const useSocialConnectRepository = ({ auth, firestore }) => {
     return {
-        setTwitterConnect: async (data) => setTwitterConnect({ auth, firestore }, data)
+        setTwitterConnect: async (data) => setTwitterConnect({ auth, firestore }, data),
+        revokeTwitterConnect: async (projectId) => revokeTwitterConnect({ auth, firestore }, projectId)
     }
 }
 
