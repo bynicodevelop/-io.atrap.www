@@ -150,14 +150,6 @@
             </div>
 
             <div class="ml-4 flex items-center md:ml-6">
-              <!-- <button
-                type="button"
-                class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <span class="sr-only">View notifications</span>
-                <BellIcon class="h-6 w-6" aria-hidden="true" />
-              </button> -->
-
               <!-- Profile dropdown -->
               <ProfileAvatarMenu />
             </div>
@@ -215,57 +207,12 @@ useMeta({
   },
 });
 
-const route = useRoute();
+const { navigation } = useAdminNavigation();
+const { projects, getProjects } = useProjects();
 
-const navigation = [
-  {
-    pathName: "adminer-projects-projectid",
-    name: "Tableau de bord",
-    href: `/adminer/projects/${route.params["projectid"]}`,
-    icon: HomeIcon,
-    current: true,
-  },
-  {
-    pathName: "adminer-projects-projectid-settings",
-    name: "Paramètres",
-    href: `/adminer/projects/${route.params["projectid"]}/settings`,
-    icon: AdjustmentsIcon,
-  },
-];
-
-for (let i = 0; i < navigation.length; i++) {
-  navigation[i].current = navigation[i].pathName === route.name;
-}
-
-const router = useRouter();
-
-const projects = ref([]);
 const sidebarOpen = ref(false);
 
 onMounted(async () => {
-  const { $fire } = useNuxtApp();
-
-  const { auth, firestore } = $fire;
-
-  const projectRepository = useProjectRepository({ auth, firestore });
-  const userRespository = useUserRepository({ auth, firestore });
-
-  const user = <{ uid: string }>await userRespository.getCurrentUser();
-
-  if (user.uid) {
-    projectRepository.getProjects((values) => (projects.value = values));
-  }
+  await getProjects();
 });
-
-watch(router.currentRoute, (to) => {
-  navigation.forEach((item) => {
-    item.current = item.href === to.path;
-  });
-});
-
-const logout = async () => {
-  await $fire.logout();
-
-  router.push("/auth");
-};
 </script>

@@ -6,8 +6,6 @@ const schema = yup.object().shape({
     password: yup.string().min(6, "password_field").required("password_field"),
 });
 
-
-
 export const useLogin = () => {
     const router = useRouter();
 
