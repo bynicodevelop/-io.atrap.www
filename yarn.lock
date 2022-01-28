@@ -1766,10 +1766,9 @@ agent-base@6:
   dependencies:
     debug "4"
 
-aio-vue-analytics@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/aio-vue-analytics/-/aio-vue-analytics-1.0.0.tgz#1f6417420894ebe6dfb807804837f349f5c0b326"
-  integrity sha512-F1unw6u09TESRhAY5cBQhNkcY/onRq7i2tNLcDuFYnEfe1cQHOHhR5++PAX1Jg2QlAsd95bqryVFiewAlmvnIQ==
+"aio-vue-analytics@https://github.com/bynicodevelop/aio-analytics#main":
+  version "1.0.1"
+  resolved "https://github.com/bynicodevelop/aio-analytics#e1a973145660802b585a0d601293a3f44f962584"
 
 ajv-formats@^2.1.1:
   version "2.1.1"
