@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
-      <ul role="list" class="divide-y divide-gray-200">
+      <!--  <ul role="list" class="divide-y divide-gray-200">
         <li v-for="tweet in tweets" :key="tweet.id">
           {{ tweet }}
-          <!-- <NuxtLink
+          <NuxtLink
             :to="{
               name: 'adminer-projects-projectid-editors-tweets-id',
               params: { id: tweet.id },
@@ -73,9 +73,9 @@
                 </div>
               </div>
             </div>
-          </NuxtLink> -->
+          </NuxtLink>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </template>
@@ -92,39 +92,53 @@ import {
   CloudUploadIcon,
 } from "@heroicons/vue/solid/index.js";
 
-import * as dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime.js";
-import "dayjs/locale/fr";
+// import * as dayjs from "dayjs";
+// import relativeTime from "dayjs/plugin/relativeTime.js";
+// import "dayjs/locale/fr";
 
-dayjs.extend(relativeTime);
+// dayjs.extend(relativeTime);
 
-const { $fire } = useNuxtApp();
+// const { $fire } = useNuxtApp();
 
 definePageMeta({
   layout: "admin",
 });
 
 const route = useRoute();
+const userRepository = useState("userRepository").value;
+const tweetRepository = useState("tweetRepository").value;
+
+useTweetEditor({ route, userRepository, tweetRepository });
 
 const tweets = ref([]);
 
-onMounted(async () => {
-  const { auth, firestore } = $fire;
+// onMounted(async () => {
+//   const tweetEditor = await useTweetEditor();
 
-  const { projectid, id } = route.params;
+//   tweets.value = tweetEditor.tweets;
+// });
 
-  const tweetRepository = useTweetRepository({ auth, firestore });
+// const route = useRoute();
 
-  await tweetRepository.getPlannedTweets(
-    {
-      projectId: projectid,
-      tweetId: id,
-    },
-    (data) => {
-      tweets.value = data;
-    }
-  );
-});
+// const tweets = ref([]);
+
+// onMounted(async () => {
+//   const { auth, firestore } = $fire;
+
+//   const { projectid, id } = route.params;
+
+//   const tweetRepository = useTweetRepository({ auth, firestore });
+
+//   await tweetRepository.getPlannedTweets(
+//     {
+//       projectId: projectid,
+//       tweetId: id,
+//     },
+//     (data) => {
+//       tweets.value = data;
+//     }
+//   );
+// });
 
 const onPublish = (tweet) => {
   console.log(tweet);

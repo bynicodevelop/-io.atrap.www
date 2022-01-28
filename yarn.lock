@@ -272,10 +272,6 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@bob6664569/content-spinner@https://github.com/bynicodevelop/content-spinner":
-  version "0.1.1"
-  resolved "https://github.com/bynicodevelop/content-spinner#a90f5b41c99304b7c117ded9f124a9a5d1b623f0"
-
 "@cloudflare/kv-asset-handler@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.2.0.tgz#c9959bbd7a1c40bd7c674adae98aa8c8d0e5ca68"
