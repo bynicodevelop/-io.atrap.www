@@ -1,46 +1,40 @@
 import { defineNuxtPlugin } from '#app';
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFirebase } from '~~/composables/useFirebase';
+import UserRepository from '~~/repositories/UserRepository';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-    const router = useRouter();
-    const cookies = useCookie('__session');
-  
-    const { auth, firestore } = useFirebase();
-  
-    // Permet de récupérer l'utilisateur connecté
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is signed in.");
+  const router = useRouter();
 
-        if(window.location.href.includes("/auth")) {
-          router.push({
-            name: 'adminer'
-          })
-        }
-        
-      } else {
-        console.log("User is signed out.");
+  const { auth, firestore } = useFirebase();
 
-        const c: any = cookies.value;
+  const userRepository = new UserRepository(auth);
 
-        cookies.value = <any>{ ...c, ...{ isAuthenticated: false } };
-        
-        if(window.location.href.includes("adminer")) {
-          router.push({
-            name: 'auth'
-          })
-        }
-      }
-    })
+  useState('userRepository', () => userRepository);
 
-    return {
-      provide: {
-        fire: {
-          auth, 
-          firestore,
-          logout: () => signOut(auth),
-        }
+  const user = await userRepository.getCurrentUser();
+
+  if (user) {
+    if (window.location.href.includes("/auth")) {
+      router.push({
+        name: 'adminer'
+      })
+    }
+  } else {
+    if (window.location.href.includes("adminer")) {
+      router.push({
+        name: 'auth'
+      })
+    }
+  }
+
+  console.log("firebase plugin loaded");
+
+  return {
+    provide: {
+      fire: {
+        auth,
+        firestore,
       }
     }
-  })
+  }
+})

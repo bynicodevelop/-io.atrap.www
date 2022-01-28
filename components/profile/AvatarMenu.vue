@@ -65,16 +65,12 @@ import {
 
 const userNavigation = [{ name: "Déconnexion", href: "/logout" }];
 
-const { $fire } = useNuxtApp();
+const userRepository = useState("userRepository").value;
 
 const router = useRouter();
 
 const logout = async () => {
-  const { auth } = $fire;
-
-  const userRespository = useUserRepository({ auth });
-
-  await userRespository.logout();
+  await userRepository.logout();
 
   router.push({
     name: "auth",
