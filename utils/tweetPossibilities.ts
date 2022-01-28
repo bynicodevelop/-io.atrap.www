@@ -37,7 +37,6 @@ export const tweetPossibilities = (
     result = Object.keys(convertStringToMath).reduce((acc, key) => {
         return acc.replace(key, convertStringToMath[key]);
     }, result);
-    console.log(result);
 
     try {
         possibilities = evaluate(result);
