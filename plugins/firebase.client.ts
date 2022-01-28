@@ -1,6 +1,7 @@
 import { defineNuxtPlugin } from '#app';
 import { useFirebase } from '~~/composables/useFirebase';
 import ProjectRepository from '~~/repositories/ProjectRepository';
+import TweetRepository from '~~/repositories/TweetRepository';
 import UserRepository from '~~/repositories/UserRepository';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -14,12 +15,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const projectRepository = new ProjectRepository(firestore, auth);
   useState('projectRepository', () => projectRepository);
 
+  const tweetRepository = new TweetRepository(firestore, auth);
+  useState('tweetRepository', () => tweetRepository);
+
   const user = await userRepository.getCurrentUser();
 
   if (user) {
     console.log("User is logged in");
-
-
 
     if (window.location.href.includes("/auth")) {
       router.push({
