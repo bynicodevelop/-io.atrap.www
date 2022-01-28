@@ -67,15 +67,15 @@
                 <div class="ml-2 flex-shrink-0 flex">
                   <p
                     :class="`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  ${
-                      !tweet.status
+                      tweet.status !== 'planned'
                         ? 'bg-orange-100 text-orange-800'
                         : 'bg-green-100 text-green-800'
                     }`"
                   >
                     {{
-                      !tweet.status
+                      tweet.status !== "planned"
                         ? "Plannification en cours..."
-                        : tweet.status
+                        : "Plannifié"
                     }}
                   </p>
                 </div>
@@ -133,7 +133,7 @@ import {
 } from "@heroicons/vue/solid/index.js";
 
 import * as dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import relativeTime from "dayjs/plugin/relativeTime.js";
 import "dayjs/locale/fr";
 
 const { $fire } = useNuxtApp();

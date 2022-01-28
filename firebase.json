@@ -18,20 +18,11 @@
     "source": ".output/server"
   },
   "emulators": {
-    "functions": {
-      "port": 5001
-    },
     "hosting": {
       "port": 5002
     },
     "ui": {
       "enabled": true
-    },
-    "auth": {
-      "port": 9099
-    },
-    "firestore": {
-      "port": 8080
     }
   },
   "firestore": {

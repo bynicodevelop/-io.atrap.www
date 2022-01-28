@@ -6,7 +6,7 @@ service cloud.firestore {
     }
 
     match /users/{userId}/projects/{document=**} {
-      allow create, update, list, get: if request.auth.uid == userId;
+      allow create, list: if request.auth.uid == userId;
     }
   }
 }

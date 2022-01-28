@@ -7,14 +7,12 @@
     "preset": "NITRO_PRESET=firebase yarn build",
     "local": "cp .env.development .env && yarn clean && yarn && yarn preset && firebase emulators:start",
     "deploy": "cp .env.production .env && yarn clean && yarn && yarn preset && firebase deploy",
-    "emulator": "firebase emulators:start",
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
     "nuxt3": "latest"
   },
   "dependencies": {
-    "@bob6664569/content-spinner": "https://github.com/bynicodevelop/content-spinner",
     "@headlessui/vue": "^1.4.3",
     "@heroicons/vue": "^1.0.5",
     "@nuxt/postcss8": "^1.1.3",
