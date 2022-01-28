@@ -11,6 +11,8 @@ const schema = yup.object().shape({
 export const useLogin = () => {
     const router = useRouter();
 
+    const isAuthenticated = ref(false);
+
     const email = ref("");
     const emailError = ref(false);
 
@@ -83,12 +85,20 @@ export const useLogin = () => {
         }
     }
 
+    const isLogin = async () => {
+        const user = await userRepository.getCurrentUser();
+
+        isAuthenticated.value = !!user;
+    };
+
     return {
         email,
         emailError,
         password,
         passwordError,
         paramsNotif,
+        isAuthenticated,
         onSubmit,
+        isLogin,
     }
 }

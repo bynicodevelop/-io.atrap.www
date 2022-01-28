@@ -14,12 +14,16 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const user = await userRepository.getCurrentUser();
 
   if (user) {
+    console.log("User is logged in");
+
     if (window.location.href.includes("/auth")) {
       router.push({
         name: 'adminer'
       })
     }
   } else {
+    console.log("User is not logged in");
+
     if (window.location.href.includes("adminer")) {
       router.push({
         name: 'auth'
