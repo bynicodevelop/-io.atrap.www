@@ -12,12 +12,16 @@
                 <div class="ml-2 flex-shrink-0 flex">
                   <p
                     :class="`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  ${
-                      tweet.status === 'published'
+                      $date.isHappened(tweet.publishedAt)
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
                     }`"
                   >
-                    {{ tweet.status == "published" ? "Publié" : "En attente" }}
+                    {{
+                      $date.isHappened(tweet.publishedAt)
+                        ? "Publié"
+                        : "En attente"
+                    }}
                   </p>
                 </div>
               </div>
@@ -48,6 +52,17 @@
                     />
                     Publier maintenant
                   </button>
+                  <button
+                    v-if="tweet.status != 'published'"
+                    @click="onPublish(tweet)"
+                    class="mt-2 flex items-center text-sm text-rose-500 sm:mt-0 sm:ml-2"
+                  >
+                    <TrashIcon
+                      class="flex-shrink-0 mr-1.5 h-5 w-5 text-rose-400"
+                      aria-hidden="true"
+                    />
+                    Supprimer
+                  </button>
                 </div>
                 <div
                   class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
@@ -57,10 +72,14 @@
                     aria-hidden="true"
                   />
                   <p>
-                    {{ tweet.status == "published" ? "Publié" : "Créé" }}
+                    {{
+                      $date.isHappened(tweet.publishedAt)
+                        ? "Publié"
+                        : "Sera publié"
+                    }}
                     {{ " " }}
-                    <time :datetime="tweet.createdAt">{{
-                      $date(tweet.publishedAt)
+                    <time :datetime="tweet.publishedAt">{{
+                      $date.humanize(tweet.publishedAt)
                     }}</time>
                   </p>
                 </div>
@@ -74,7 +93,11 @@
 </template>
 
 <script setup>
-import { CloudUploadIcon, CalendarIcon } from "@heroicons/vue/outline/index.js";
+import {
+  CloudUploadIcon,
+  CalendarIcon,
+  TrashIcon,
+} from "@heroicons/vue/outline/index.js";
 
 definePageMeta({
   layout: "admin",

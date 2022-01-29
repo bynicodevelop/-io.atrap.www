@@ -57,7 +57,8 @@ export default class TweetRepository {
 
                 return {
                     content,
-                    publishedAt,
+                    status: publishedAt < publishedAt.seconds ? 'published' : '',
+                    publishedAt: !publishedAt ? new Date().getTime() : publishedAt.seconds,
                     tweetRef: tweetRef.path,
                     id: doc.id,
                 }

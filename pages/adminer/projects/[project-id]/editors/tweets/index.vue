@@ -110,7 +110,7 @@
                     Créé
                     {{ " " }}
                     <time :datetime="tweet.createdAt">{{
-                      $date(tweet.createdAt)
+                      $date.humanize(tweet.createdAt)
                     }}</time>
                   </p>
                 </div>
