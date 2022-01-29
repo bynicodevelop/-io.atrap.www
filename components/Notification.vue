@@ -77,7 +77,7 @@ $on("notification", (paramsNotif) => {
 });
 
 watch(params, (val) => {
-  if (val) {
+  if (val.show) {
     setTimeout(() => {
       params.value.show = false;
     }, 3000);

@@ -4,7 +4,7 @@
       @confirm="onDelete(tweetToDelete)"
       v-model:openModal="openModal"
       title="Confirmation de suppression"
-      message="Attention ! En supprimant ce tweet, vous allez aussi supprimer tous les contenus associés"
+      message="Attention ! En supprimant ce tweet, vous allez aussi supprimer tous les contenus associés."
     />
 
     <!-- Formulaire de créaction -->

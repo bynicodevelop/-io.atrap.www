@@ -25,7 +25,7 @@ export const useTweetPlanned = ({ onSuccess }) => {
     const onDelete = async (tweet) => {
         await tweetRepository.deleteTweetContent(projectid as string, tweet.id);
 
-        onSuccess('Notification', 'ce contenu a bien été supprimé');
+        onSuccess('Notification', 'Ce contenu a bien été supprimé.');
     }
 
     return {

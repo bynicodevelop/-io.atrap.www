@@ -1,5 +1,4 @@
 import TweetRepository from "~~/repositories/TweetRepository";
-import { useNotification } from "./useNotification";
 
 export const useTweet = ({ onSuccess }) => {
     const route = useRoute();
@@ -45,13 +44,13 @@ export const useTweet = ({ onSuccess }) => {
             publishStatus: !tweet.publishStatus,
         });
 
-        onSuccess('Notification', 'Votre tweet a bien été mis à jour');
+        onSuccess('Notification', 'Votre tweet a bien été mis à jour.');
     }
 
     const onDelete = async (tweet: any) => {
         await tweetRepository.deleteTweet(projectid as string, tweet.id);
 
-        onSuccess('Notification', 'Votre tweet avec ces différents contenus ont bien été supprimés');
+        onSuccess('Notification', 'Votre tweet avec ces différents contenus ont bien été supprimés.');
 
         tweetToDelete.value = null;
     }

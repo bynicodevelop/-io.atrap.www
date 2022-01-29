@@ -117,13 +117,6 @@ const props = defineProps({
   },
 });
 
-const params = ref({
-  show: false,
-  title: "",
-  subtitle: "",
-  type: "success",
-});
-
 const open = computed({
   get() {
     return props.openModal;
