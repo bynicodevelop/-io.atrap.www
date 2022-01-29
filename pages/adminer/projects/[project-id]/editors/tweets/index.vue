@@ -53,7 +53,15 @@
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
       <ul role="list" class="divide-y divide-gray-200">
         <li v-for="tweet in tweets" :key="tweet.id">
-          <NuxtLink :to="{}" class="block hover:bg-gray-50">
+          <NuxtLink
+            :to="{
+              name: 'adminer-projects-projectid-editors-tweets-id',
+              params: {
+                id: tweet.id,
+              },
+            }"
+            class="block hover:bg-gray-50"
+          >
             <div class="px-4 py-4 sm:px-6">
               <div class="flex items-center justify-between">
                 <p class="text-sm text-gray-600 line-clamp-2 truncate">
@@ -133,7 +141,6 @@ const {
   isLoading,
   onCreateTweet,
   getTweets,
-  dateHumanize,
 } = useTweet();
 
 onMounted(async () => {

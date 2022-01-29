@@ -1,5 +1,5 @@
 import { Auth } from "firebase/auth";
-import { addDoc, collection, CollectionReference, Firestore, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, CollectionReference, doc, Firestore, onSnapshot, orderBy, query, serverTimestamp, where } from "firebase/firestore";
 
 export default class TweetRepository {
     firestore: Firestore
@@ -36,6 +36,29 @@ export default class TweetRepository {
                     status: status || '',
                     possibilities: possibilities || 0,
                     createdAt: !createdAt ? new Date().getTime() : createdAt.seconds,
+                    id: doc.id,
+                }
+            });
+
+            cb(data);
+        });
+    }
+
+    async getTweetsById(projectId: string, tweetId: string, cb: Function): Promise<void> {
+        const docRef = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/tweets`, tweetId);
+
+        const tweetsColRef = collection(this.firestore, `tweets`);
+
+        const p = query(tweetsColRef, where("tweetRef", "==", docRef));
+
+        await onSnapshot(p, (values) => {
+            const data = values.docs.map((doc) => {
+                const { content, publishedAt, tweetRef } = doc.data();
+
+                return {
+                    content,
+                    publishedAt,
+                    tweetRef: tweetRef.path,
                     id: doc.id,
                 }
             });

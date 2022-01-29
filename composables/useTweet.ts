@@ -1,11 +1,8 @@
-import TweetRespository from "~~/repositories/TweetRepository";
-
+import TweetRepository from "~~/repositories/TweetRepository";
 
 export const useTweet = () => {
-    // dayjs.extend(relativeTime);
-
     const route = useRoute();
-    const tweetRepository = <TweetRespository>useState('tweetRepository').value;
+    const tweetRepository = <TweetRepository>useState('tweetRepository').value;
 
     const { projectid } = route.params;
 
@@ -41,9 +38,6 @@ export const useTweet = () => {
         })
     }
 
-    const dateHumanize = (date) => date; //dayjs.unix(date).locale("fr").fromNow();
-
-
     return {
         openPlanner,
         content,
@@ -53,6 +47,5 @@ export const useTweet = () => {
         isLoading,
         onCreateTweet,
         getTweets,
-        dateHumanize,
     }
 }
