@@ -63,12 +63,13 @@
                       >{{ item.name }}</a
                     >
                   </template>
-                  <a
+                  <NuxtLink
                     v-if="isAuthenticated"
-                    @click.prevent="logout"
-                    href="#"
+                    :to="{
+                      name: 'adminer',
+                    }"
                     class="font-medium text-indigo-600 hover:text-indigo-500"
-                    >Log out</a
+                    >Mes projets</NuxtLink
                   >
                 </div>
               </nav>
@@ -519,115 +520,19 @@ const navigation = [
   { name: "UTM Generateur", href: "/generator/utm" },
 ];
 
-const { $tracker, $fire } = useNuxtApp();
+const { isAuthenticated, isLogin } = useLogin();
 
-const user = ref(null);
-const isAuthenticated = ref(false);
-const emailError = ref(false);
-const email = ref("");
+const {
+  email,
+  emailError,
+  isLoading,
+  isStarted,
+  paramsNotif,
+  onEmailBlur,
+  onEmailFocus,
+  onSubmit,
+  scrollToElement,
+} = useNewsletter();
 
-const isLoading = ref(false);
-const isStarted = ref(false);
-
-const paramsNotif = reactive({
-  show: false,
-  title: "",
-  subtitle: "",
-});
-
-onMounted(async () => {
-  const { auth, firestore } = $fire;
-
-  const projecRepository = useProjectRepository({ auth, firestore });
-
-  user.value = await projecRepository.getCurrentUser();
-
-  isAuthenticated.value = user.value !== null;
-});
-
-const logout = async () => {
-  paramsNotif.show = false;
-  paramsNotif.title = "";
-  paramsNotif.subtitle = "";
-
-  await $fire.logout();
-
-  isAuthenticated.value = false;
-
-  paramsNotif.show = true;
-  paramsNotif.title = "Vous êtes déconnecté 👍";
-};
-
-const scrollToElement = (id: string): void => {
-  const el: HTMLElement = document.getElementById(id.replace("#", ""));
-
-  el.scrollIntoView({ behavior: "smooth" });
-};
-
-const onEmailBlur = async () => {
-  emailError.value = false;
-
-  try {
-    await schema.validate({ email: email.value });
-  } catch (e) {
-    emailError.value = true;
-  }
-};
-
-const onEmailFocus = () => {
-  isStarted.value = true;
-  emailError.value = false;
-};
-
-const onSubmit = async () => {
-  isLoading.value = true;
-
-  emailError.value = false;
-
-  paramsNotif.show = false;
-  paramsNotif.title = "";
-  paramsNotif.subtitle = "";
-
-  try {
-    const isValid = await schema.isValid({
-      email: email.value,
-    });
-
-    if (isValid) {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.value,
-        }),
-      };
-
-      const response: Response = await fetch(
-        "/api/emailing/mailchimp/subscribe",
-        requestOptions
-      );
-
-      const result = await response.json();
-
-      if (result["type"] == "success") {
-        email.value = "";
-
-        paramsNotif.show = true;
-        paramsNotif.title = "Félicitations 👋";
-        paramsNotif.subtitle =
-          "Vous êtes maintenant inscrit à la liste d'attente. Vous recevez des nouvelles de nous prochainement.";
-
-        $tracker.lead();
-      } else {
-        emailError.value = true;
-      }
-    }
-  } catch (error) {
-    console.log(error);
-
-    emailError.value = true;
-  }
-
-  isLoading.value = false;
-};
+onMounted(async () => await isLogin());
 </script>

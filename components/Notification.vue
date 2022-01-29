@@ -13,35 +13,35 @@
         leave-to-class="opacity-0"
       >
         <div
-          v-if="isShow"
+          v-if="params.show"
           class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
         >
           <div class="p-4">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <CheckCircleIcon
-                  v-if="type == 'info'"
+                  v-if="params.type == 'success'"
                   class="h-6 w-6 text-green-400"
                   aria-hidden="true"
                 />
 
                 <ExclamationCircleIcon
-                  v-if="type == 'error'"
+                  v-if="params.type == 'error'"
                   class="h-6 w-6 text-red-400"
                   aria-hidden="true"
                 />
               </div>
               <div class="ml-3 w-0 flex-1 pt-0.5">
                 <p class="text-sm font-medium text-gray-900">
-                  {{ title }}
+                  {{ params.title }}
                 </p>
                 <p class="mt-1 text-sm text-gray-500">
-                  {{ subtitle }}
+                  {{ params.subtitle }}
                 </p>
               </div>
               <div class="ml-4 flex-shrink-0 flex">
                 <button
-                  @click="isShow = false"
+                  @click="params.show = false"
                   class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <span class="sr-only">Fermer</span>
@@ -56,53 +56,31 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/vue/outline/index.js";
 import { XIcon } from "@heroicons/vue/solid/index.js";
 
-const props = defineProps({
-  show: {
-    type: Boolean,
-    default: false,
-  },
-  title: {
-    type: String,
-    default: "",
-  },
-  subtitle: {
-    type: String,
-    default: "",
-  },
-  type: {
-    type: String,
-    default: "info",
-  },
-  timeout: {
-    type: Number,
-    default: 3000,
-  },
+const { $on } = useNotification();
+
+const params = ref({
+  show: false,
+  title: "",
+  subtitle: "",
+  type: "success",
 });
 
-const emits = defineEmits(["update:show"]);
-
-const { show, title, subtitle, timeout, type } = toRefs(props);
-
-const isShow = ref(false);
-
-watch(show, (val) => {
-  isShow.value = val;
-  emits("update:show", val);
+$on("notification", (paramsNotif) => {
+  params.value = paramsNotif;
 });
 
-watch(isShow, (val) => {
-  if (val) {
+watch(params, (val) => {
+  if (val.show) {
     setTimeout(() => {
-      isShow.value = false;
-      emits("update:show", false);
-    }, timeout.value);
+      params.value.show = false;
+    }, 3000);
   }
 });
 </script>
