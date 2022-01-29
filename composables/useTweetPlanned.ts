@@ -5,12 +5,16 @@ export const useTweetPlanned = () => {
     const tweetRepository = <TweetRepository>useState('tweetRepository').value;
 
     const tweets = ref([]);
+    const tweet = ref({});
 
     const { projectid, id } = route.params;
 
     const getTweets = async () => {
-        tweetRepository.getTweetsById(projectid as string, id as string, (data) => {
-            tweets.value = data;
+        tweetRepository.getTweetsById(projectid as string, id as string, (model) => {
+            const { dataModel, tweetModel } = model;
+
+            tweets.value = dataModel;
+            tweet.value = tweetModel;
         });
     }
 
@@ -18,9 +22,15 @@ export const useTweetPlanned = () => {
         console.log('onPublish');
     }
 
+    const onDelete = (tweet) => {
+        console.log('onDelete');
+    }
+
     return {
+        tweet,
         tweets,
         getTweets,
         onPublish,
+        onDelete,
     }
 }

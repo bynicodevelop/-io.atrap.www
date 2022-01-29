@@ -1,6 +1,7 @@
 import TweetRepository from "~~/repositories/TweetRepository";
+import { useNotification } from "./useNotification";
 
-export const useTweet = () => {
+export const useTweet = ({ onSuccess }) => {
     const route = useRoute();
     const tweetRepository = <TweetRepository>useState('tweetRepository').value;
 
@@ -38,6 +39,14 @@ export const useTweet = () => {
         })
     }
 
+    const onChangePublishStatus = async (tweet: any) => {
+        await tweetRepository.updateTweet(projectid as string, tweet.id, {
+            publishStatus: !tweet.publishStatus,
+        });
+
+        onSuccess('Notification', 'Votre tweet a bien été mis à jour');
+    }
+
     return {
         openPlanner,
         content,
@@ -47,5 +56,6 @@ export const useTweet = () => {
         isLoading,
         onCreateTweet,
         getTweets,
+        onChangePublishStatus,
     }
 }

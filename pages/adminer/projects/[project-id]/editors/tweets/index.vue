@@ -85,9 +85,9 @@
               </div>
               <div class="mt-2 sm:flex sm:justify-between">
                 <div class="sm:flex">
-                  <p class="flex items-center text-xs text-gray-500">
+                  <p class="flex items-center text-sm text-gray-500">
                     <svg
-                      class="w-3 h-3 mr-2"
+                      class="w-4 h-4 mr-2"
                       aria-hidden="true"
                       fill="currentColor"
                       viewBox="0 0 20 20"
@@ -98,6 +98,23 @@
                     </svg>
                     {{ tweet.possibilities }}
                   </p>
+                  <button
+                    @click.prevent="onChangePublishStatus(tweet)"
+                    type="button"
+                    class="flex items-center text-sm text-gray-500 ml-2"
+                  >
+                    <PlayIcon
+                      v-if="tweet.publishStatus"
+                      class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    <PauseIcon
+                      v-else
+                      class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    Statut
+                  </button>
                 </div>
                 <div
                   class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
@@ -124,13 +141,19 @@
 </template>
 
 <script setup>
-import { CalendarIcon } from "@heroicons/vue/solid/index.js";
+import {
+  CalendarIcon,
+  PlayIcon,
+  PauseIcon,
+} from "@heroicons/vue/solid/index.js";
 
 definePageMeta({
   layout: "admin",
 });
 
 const { $date } = useNuxtApp();
+
+const { paramsNotif, onSuccess } = useNotification();
 
 const {
   openPlanner,
@@ -141,7 +164,8 @@ const {
   isLoading,
   onCreateTweet,
   getTweets,
-} = useTweet();
+  onChangePublishStatus,
+} = useTweet({ onSuccess });
 
 onMounted(async () => {
   await getTweets();

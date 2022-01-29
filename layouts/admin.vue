@@ -1,5 +1,7 @@
 <template>
   <div class="h-full">
+    <Notification />
+
     <div class="h-full">
       <TransitionRoot as="template" :show="sidebarOpen">
         <Dialog

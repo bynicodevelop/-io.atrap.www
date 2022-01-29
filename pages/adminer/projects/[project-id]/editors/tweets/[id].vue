@@ -1,5 +1,47 @@
 <template>
   <div>
+    <div class="bg-white overflow-hidden p-3 grid justify-items-end">
+      <Switch
+        v-model="enabled"
+        @click="onChangePublishStatus(tweet)"
+        :class="[
+          enabled ? 'bg-green-600' : 'bg-gray-200',
+          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500',
+        ]"
+      >
+        <span class="sr-only">Use setting</span>
+        <span
+          :class="[
+            enabled ? 'translate-x-5' : 'translate-x-0',
+            'pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200',
+          ]"
+        >
+          <span
+            :class="[
+              enabled
+                ? 'opacity-0 ease-out duration-100'
+                : 'opacity-100 ease-in duration-200',
+              'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity',
+            ]"
+            aria-hidden="true"
+          >
+            <PlayIcon class="h-4 w-4 text-gray-400" aria-hidden="true" />
+          </span>
+          <span
+            :class="[
+              enabled
+                ? 'opacity-100 ease-in duration-200'
+                : 'opacity-0 ease-out duration-100',
+              'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity',
+            ]"
+            aria-hidden="true"
+          >
+            <PauseIcon class="h-4 w-4 text-green-600" aria-hidden="true" />
+          </span>
+        </span>
+      </Switch>
+    </div>
+
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
       <ul role="list" class="divide-y divide-gray-200">
         <li v-for="tweet in tweets" :key="tweet.id">
@@ -42,7 +84,7 @@
                     {{ tweet.possibilities }}
                   </p>
                   <button
-                    v-if="tweet.status != 'published'"
+                    v-if="!$date.isHappened(tweet.publishedAt)"
                     @click="onPublish(tweet)"
                     class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-2"
                   >
@@ -54,7 +96,7 @@
                   </button>
                   <button
                     v-if="tweet.status != 'published'"
-                    @click="onPublish(tweet)"
+                    @click="onDelete(tweet)"
                     class="mt-2 flex items-center text-sm text-rose-500 sm:mt-0 sm:ml-2"
                   >
                     <TrashIcon
@@ -93,21 +135,35 @@
 </template>
 
 <script setup>
+import { Switch } from "@headlessui/vue";
+
 import {
   CloudUploadIcon,
   CalendarIcon,
   TrashIcon,
+  PlayIcon,
+  PauseIcon,
 } from "@heroicons/vue/outline/index.js";
 
 definePageMeta({
   layout: "admin",
 });
 
+const { onSuccess } = useNotification();
+
+const enabled = ref(false);
+
 const { $date } = useNuxtApp();
 
-const { tweets, getTweets, onPublish } = useTweetPlanned();
+const { tweet, tweets, getTweets, onPublish, onDelete } = useTweetPlanned();
+
+const { onChangePublishStatus } = useTweet({ onSuccess });
 
 onMounted(async () => {
   await getTweets();
+});
+
+watch(tweet, async (value) => {
+  enabled.value = value.publishStatus;
 });
 </script>
