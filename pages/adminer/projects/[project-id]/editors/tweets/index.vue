@@ -1,5 +1,12 @@
 <template>
   <div>
+    <ModalConfirm
+      @confirm="onDelete(tweetToDelete)"
+      v-model:openModal="openModal"
+      title="Confirmation de suppression"
+      message="Attention ! En supprimant ce tweet, vous allez aussi supprimer tous les contenus associés"
+    />
+
     <!-- Formulaire de créaction -->
     <div v-if="!isLoading" class="pb-8">
       <EditorsTweetsForm
@@ -115,6 +122,17 @@
                     />
                     Statut
                   </button>
+                  <button
+                    v-if="tweet.status != 'published'"
+                    @click.prevent="confirmDeletion(tweet)"
+                    class="mt-2 flex items-center text-sm text-rose-500 sm:mt-0 sm:ml-2"
+                  >
+                    <TrashIcon
+                      class="flex-shrink-0 mr-1.5 h-5 w-5 text-rose-400"
+                      aria-hidden="true"
+                    />
+                    Supprimer
+                  </button>
                 </div>
                 <div
                   class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
@@ -145,11 +163,14 @@ import {
   CalendarIcon,
   PlayIcon,
   PauseIcon,
+  TrashIcon,
 } from "@heroicons/vue/solid/index.js";
 
 definePageMeta({
   layout: "admin",
 });
+
+const openModal = ref(false);
 
 const { $date } = useNuxtApp();
 
@@ -162,12 +183,20 @@ const {
   date,
   tweets,
   isLoading,
+  tweetToDelete,
   onCreateTweet,
   getTweets,
   onChangePublishStatus,
+  onDelete,
 } = useTweet({ onSuccess });
 
 onMounted(async () => {
   await getTweets();
 });
+
+const confirmDeletion = (tweet) => {
+  openModal.value = true;
+
+  tweetToDelete.value = tweet;
+};
 </script>

@@ -1,6 +1,6 @@
 import TweetRepository from "~~/repositories/TweetRepository";
 
-export const useTweetPlanned = () => {
+export const useTweetPlanned = ({ onSuccess }) => {
     const route = useRoute();
     const tweetRepository = <TweetRepository>useState('tweetRepository').value;
 
@@ -22,8 +22,10 @@ export const useTweetPlanned = () => {
         console.log('onPublish');
     }
 
-    const onDelete = (tweet) => {
-        console.log('onDelete');
+    const onDelete = async (tweet) => {
+        await tweetRepository.deleteTweetContent(projectid as string, tweet.id);
+
+        onSuccess('Notification', 'ce contenu a bien été supprimé');
     }
 
     return {

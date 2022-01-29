@@ -7,6 +7,7 @@ export const useTweet = ({ onSuccess }) => {
 
     const { projectid } = route.params;
 
+    const tweetToDelete = ref(null);
     const openPlanner = ref(false);
     const isLoading = ref(false);
     const content = ref('');
@@ -47,6 +48,14 @@ export const useTweet = ({ onSuccess }) => {
         onSuccess('Notification', 'Votre tweet a bien été mis à jour');
     }
 
+    const onDelete = async (tweet: any) => {
+        await tweetRepository.deleteTweet(projectid as string, tweet.id);
+
+        onSuccess('Notification', 'Votre tweet avec ces différents contenus ont bien été supprimés');
+
+        tweetToDelete.value = null;
+    }
+
     return {
         openPlanner,
         content,
@@ -54,8 +63,10 @@ export const useTweet = ({ onSuccess }) => {
         date,
         tweets,
         isLoading,
+        tweetToDelete,
         onCreateTweet,
         getTweets,
         onChangePublishStatus,
+        onDelete,
     }
 }

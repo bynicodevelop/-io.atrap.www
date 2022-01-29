@@ -1,5 +1,5 @@
 import { Auth } from "firebase/auth";
-import { addDoc, collection, CollectionReference, doc, Firestore, getDoc, onSnapshot, orderBy, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, CollectionReference, deleteDoc, doc, Firestore, getDoc, onSnapshot, orderBy, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 
 export default class TweetRepository {
     firestore: Firestore
@@ -85,5 +85,17 @@ export default class TweetRepository {
         const docRef = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/tweets`, tweetId);
 
         await updateDoc(docRef, data);
+    }
+
+    async deleteTweetContent(projectId: string, tweetId: string): Promise<void> {
+        const docRef = doc(this.firestore, `tweets`, tweetId);
+
+        await deleteDoc(docRef);
+    }
+
+    async deleteTweet(projectId: string, tweetId: string): Promise<void> {
+        const docRef = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/tweets`, tweetId);
+
+        await deleteDoc(docRef);
     }
 }

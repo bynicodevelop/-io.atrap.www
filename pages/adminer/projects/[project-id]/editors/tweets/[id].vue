@@ -155,7 +155,9 @@ const enabled = ref(false);
 
 const { $date } = useNuxtApp();
 
-const { tweet, tweets, getTweets, onPublish, onDelete } = useTweetPlanned();
+const { tweet, tweets, getTweets, onPublish, onDelete } = useTweetPlanned({
+  onSuccess,
+});
 
 const { onChangePublishStatus } = useTweet({ onSuccess });
 
