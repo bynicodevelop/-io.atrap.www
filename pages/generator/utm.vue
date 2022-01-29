@@ -518,7 +518,6 @@ const copy = async () => {
   if (!/msie\s/i.test(window.navigator.userAgent)) {
     await navigator.clipboard.writeText(refInputValue.value.value);
   } else {
-    console.log("coucouqsd");
     document.execCommand("copy");
   }
 
