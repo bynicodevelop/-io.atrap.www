@@ -34,7 +34,9 @@ export default defineNuxtConfig({
     APP_ID: process.env.APP_ID,
   },
   privateRuntimeConfig: {
-    NUXT_APP_MAILCHIMP_API_KEY: process.env.NUXT_APP_MAILCHIMP_API_KEY
+    NUXT_APP_MAILCHIMP_API_KEY: process.env.NUXT_APP_MAILCHIMP_API_KEY,
+    NUXT_APP_TWITTER_CLIENT_ID: process.env.NUXT_APP_TWITTER_CLIENT_ID,
+    NUXT_APP_TWITTER_SECRET_CLIENT: process.env.NUXT_APP_TWITTER_SECRET_CLIENT,
   },
   vite: {
     logLevel: "info",

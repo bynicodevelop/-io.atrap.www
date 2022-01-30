@@ -50,9 +50,10 @@
           <SettingsTabsGeneral
             v-if="tabSelected.name == 'General'"
             v-model="project"
-            @onUpdate="onUpdate"
+            @onUpdate="updateProject"
           />
           <SettingsTabsSocialConnect
+            v-model="project"
             v-if="tabSelected.name == 'Connexion social'"
           />
         </div>
@@ -62,34 +63,37 @@
 </template>
 
 <script setup lang="ts">
+const { project, getProject, updateProject } = useProject();
+
+const { SITE_URL } = useRuntimeConfig();
+
 definePageMeta({
   layout: "admin",
 });
 
 const { $fire } = useNuxtApp();
 const route = useRoute();
-
-const { auth, firestore } = $fire;
-
-const { projectid } = route.params;
-
-const projectRepository = useProjectRepository({ auth, firestore });
+const cookies = useCookie("__session");
 
 const tabs = [
-  { name: "General", href: "#", current: true },
-  { name: "Connexion social", href: "#", current: false },
+  { name: "General", href: "#general", current: true },
+  { name: "Connexion social", href: "#social-connect", current: false },
 ];
 
-const { data } = await useAsyncData("project", async () => {
-  return await projectRepository.getProject(projectid);
-});
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+}
+
+const { hash } = route;
 
 const tabSelected = ref(tabs[0]);
 
-const project = reactive({
-  id: data.value.id,
-  name: data.value.name,
-  description: data.value.description,
+onMounted(async () => {
+  await getProject();
+
+  onSelectIndex();
 });
 
 const paramsNotif = reactive({
@@ -98,14 +102,22 @@ const paramsNotif = reactive({
   subtitle: "",
 });
 
-watch(tabSelected, (value) => {
+watch(route, (value) => {
+  const { hash } = value;
+
   tabs.forEach((t) => {
-    t.current = t.name == value.name;
+    t.current = t.href == hash;
   });
+
+  tabSelected.value = tabs.find((t) => t.current);
 });
 
-const onSelectTab = (tab: any) => {
-  tabSelected.value = tab;
+const onSelectIndex = () => {
+  tabs.forEach((t) => {
+    t.current = t.href == (hash || "#general");
+  });
+
+  tabSelected.value = tabs.find((t) => t.current);
 };
 
 const onUpdate = async () => {
@@ -114,6 +126,10 @@ const onUpdate = async () => {
   await projectRepository.updateProject(project);
 
   sendNotification("Vos données ont été mises à jour");
+};
+
+const onSelectTab = (tab: any) => {
+  tabSelected.value = tab;
 };
 
 const clearNotifications = () => {
