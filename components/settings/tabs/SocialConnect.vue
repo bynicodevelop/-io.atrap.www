@@ -37,6 +37,8 @@
 // const router = useRouter();
 // const route = useRoute();
 
+import { isEmpty, isUndefined } from "lodash";
+
 // const { $fire } = useNuxtApp();
 
 const props = defineProps({
@@ -45,19 +47,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-watch(
-  () => props.modelValue,
-  (value) => {
-    const { connectors } = value;
-
-    for (const connector of connectors) {
-      if (connector.id === "twitter") {
-        twitterConnector.value = connector;
-      }
-    }
-  }
-);
 
 const twitterConnector = ref(null);
 
@@ -74,4 +63,29 @@ const onTwitterConnect = (): void => {
     subtitle: "Merci de patienter. Nous vous connectons à Twitter.",
   };
 };
+
+onMounted(() => {
+  if (!isUndefined(props.modelValue.id) || !isEmpty(props.modelValue.id)) {
+    const { connectors } = props.modelValue;
+
+    for (const connector of connectors) {
+      if (connector.id === "twitter") {
+        twitterConnector.value = connector;
+      }
+    }
+  }
+});
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    const { connectors } = value;
+
+    for (const connector of connectors) {
+      if (connector.id === "twitter") {
+        twitterConnector.value = connector;
+      }
+    }
+  }
+);
 </script>
