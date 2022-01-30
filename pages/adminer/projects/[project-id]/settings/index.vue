@@ -50,7 +50,7 @@
           <SettingsTabsGeneral
             v-if="tabSelected.name == 'General'"
             v-model="project"
-            @onUpdate="onUpdate"
+            @onUpdate="updateProject"
           />
           <SettingsTabsSocialConnect
             v-model="project"
@@ -63,6 +63,8 @@
 </template>
 
 <script setup lang="ts">
+const { project, getProject, updateProject } = useProject();
+
 const { SITE_URL } = useRuntimeConfig();
 
 definePageMeta({
@@ -84,49 +86,14 @@ interface Project {
   description: string;
 }
 
-const project = ref<Project>({
-  id: null,
-  name: null,
-  description: null,
-});
-
-const loadData = async () => {
-  const { auth, firestore } = $fire;
-
-  const { projectid } = route.params;
-
-  const projectRepository = useProjectRepository({ auth, firestore });
-
-  const projectData = await projectRepository.getProject(projectid);
-
-  project.value = {
-    id: projectData.id,
-    name: projectData.name,
-    description: projectData.description,
-    connectors: projectData.connectors,
-  };
-
-  return projectData;
-};
-
 const { hash } = route;
 
 const tabSelected = ref(tabs[0]);
 
-await useAsyncData("project", async () => {
-  console.log("useAsyncData");
-
-  return loadData();
-});
-
-await onMounted(async () => {
-  console.log("onMounted");
+onMounted(async () => {
+  await getProject();
 
   onSelectIndex();
-
-  if (project.value.id == null) {
-    loadData();
-  }
 });
 
 const paramsNotif = reactive({
@@ -159,6 +126,10 @@ const onUpdate = async () => {
   await projectRepository.updateProject(project);
 
   sendNotification("Vos données ont été mises à jour");
+};
+
+const onSelectTab = (tab: any) => {
+  tabSelected.value = tab;
 };
 
 const clearNotifications = () => {

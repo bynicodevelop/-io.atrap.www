@@ -34,10 +34,10 @@
 </template>
 
 <script setup lang="ts">
-const router = useRouter();
-const route = useRoute();
+// const router = useRouter();
+// const route = useRoute();
 
-const { $fire } = useNuxtApp();
+// const { $fire } = useNuxtApp();
 
 const props = defineProps({
   modelValue: {
@@ -45,6 +45,19 @@ const props = defineProps({
     required: true,
   },
 });
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    const { connectors } = value;
+
+    for (const connector of connectors) {
+      if (connector.id === "twitter") {
+        twitterConnector.value = connector;
+      }
+    }
+  }
+);
 
 const twitterConnector = ref(null);
 
@@ -61,27 +74,4 @@ const onTwitterConnect = (): void => {
     subtitle: "Merci de patienter. Nous vous connectons à Twitter.",
   };
 };
-
-if (props.modelValue.id !== null) {
-  const { connectors } = props.modelValue;
-
-  for (const connector of connectors) {
-    if (connector.id === "twitter") {
-      twitterConnector.value = connector;
-    }
-  }
-}
-
-watch(
-  () => props.modelValue,
-  (value) => {
-    const { connectors } = value;
-
-    for (const connector of connectors) {
-      if (connector.id === "twitter") {
-        twitterConnector.value = connector;
-      }
-    }
-  }
-);
 </script>
