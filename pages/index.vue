@@ -296,8 +296,8 @@
             </span>
           </h1>
           <p class="mt-8 text-xl text-gray-500 leading-8">
-            Atrap.io est un outil en développement et en phase de test depuis
-            quelques semaines.
+            Atrap.io est un outil puissant que nous déployons progressivement.
+            Mais vous pouvez vous enregistrer gratuitement à la liste d'attente.
           </p>
         </div>
         <div class="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto">
@@ -448,10 +448,12 @@
                 <h2
                   class="text-3xl font-extrabold text-white tracking-tight sm:text-4xl"
                 >
-                  Soyez averti lorsque nous lançerons Atrap.io
+                  Rejoignez la liste d'attente
                 </h2>
                 <p class="mt-6 mx-auto max-w-2xl text-lg text-indigo-200">
-                  Faites partie des premiers inscrits de la liste d'attente.
+                  L'accès est limité à un petit groupe de testeurs.
+                  Inscrivez-vous dès aujourd'hui pour avoir la chance de
+                  l'essayer et de nous aider à nous améliorer.
                 </p>
               </div>
               <form
