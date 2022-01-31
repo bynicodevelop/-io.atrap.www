@@ -5,8 +5,11 @@
     >
       <label for="description" class="sr-only">Description</label>
       <textarea
+        ref="textarea"
+        @focus="onResize"
+        @keyup="onResize"
         v-model="content"
-        rows="2"
+        rows="4"
         name="content"
         id="content"
         class="block w-full border-0 py-0 pt-2.5 resize-none placeholder-gray-500 focus:ring-0 sm:text-sm"
@@ -16,12 +19,12 @@
       <!-- Spacer element to match the height of the toolbar -->
       <div aria-hidden="true">
         <div class="py-2">
-          <div class="h-9" />
+          <div class="h-4" />
         </div>
         <div class="h-px" />
         <div class="py-2">
           <div class="py-px">
-            <div class="h-9" />
+            <div class="h-4" />
           </div>
         </div>
       </div>
@@ -98,4 +101,13 @@ const content = computed({
     emits("update:content", value);
   },
 });
+
+const textarea = ref(null);
+
+onMounted(() => onResize());
+
+const onResize = () => {
+  textarea.value.style.height = `auto`;
+  textarea.value.style.height = `${textarea.value.scrollHeight}px`;
+};
 </script>
