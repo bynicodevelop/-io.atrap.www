@@ -12,7 +12,7 @@
         rows="4"
         name="content"
         id="content"
-        class="block w-full border-0 py-0 pt-2.5 resize-none placeholder-gray-500 focus:ring-0 sm:text-sm"
+        class="block w-full border-0 py-0 pt-2.5 resize-none placeholder-gray-500 focus:ring-0 sm:text-sm overflow-hidden"
         placeholder="Écrivez votre twitter... (e.g. {Hello|Bonjour|Salut} {World|Monde})"
       />
 
