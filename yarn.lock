@@ -1768,7 +1768,7 @@ agent-base@6:
 
 "aio-vue-analytics@https://github.com/bynicodevelop/aio-analytics#main":
   version "1.0.1"
-  resolved "https://github.com/bynicodevelop/aio-analytics#e1a973145660802b585a0d601293a3f44f962584"
+  resolved "https://github.com/bynicodevelop/aio-analytics#1a1888b45c6460a92d68ee8fac60c434f55baf54"
 
 ajv-formats@^2.1.1:
   version "2.1.1"

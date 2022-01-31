@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Notification />
     <slot />
     <CookieBanner />
     <Footer />

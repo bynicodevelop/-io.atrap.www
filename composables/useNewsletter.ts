@@ -4,13 +4,8 @@ const schema = yup.object().shape({
     email: yup.string().email().required(),
 });
 
-export const useNewsletter = () => {
-    const paramsNotif = reactive({
-        show: false,
-        title: "",
-        subtitle: "",
-        type: "",
-    });
+export const useNewsletter = ({ onSuccess }) => {
+    const { $tracker } = useNuxtApp();
 
     const emailError = ref(false);
     const email = ref("");
@@ -44,10 +39,6 @@ export const useNewsletter = () => {
 
         emailError.value = false;
 
-        paramsNotif.show = false;
-        paramsNotif.title = "";
-        paramsNotif.subtitle = "";
-
         try {
             const isValid = await schema.isValid({
                 email: email.value,
@@ -72,12 +63,9 @@ export const useNewsletter = () => {
                 if (result["type"] == "success") {
                     email.value = "";
 
-                    paramsNotif.show = true;
-                    paramsNotif.title = "Félicitations 👋";
-                    paramsNotif.subtitle =
-                        "Vous êtes maintenant inscrit à la liste d'attente. Vous recevez des nouvelles de nous prochainement.";
+                    onSuccess("Félicitations 👋", "Vous êtes maintenant inscrit à la liste d'attente. Vous recevez des nouvelles de nous prochainement.");
 
-                    //   $tracker.lead();
+                    $tracker.lead();
                 } else {
                     emailError.value = true;
                 }
@@ -96,7 +84,6 @@ export const useNewsletter = () => {
         emailError,
         isLoading,
         isStarted,
-        paramsNotif,
         onEmailBlur,
         onEmailFocus,
         onSubmit,

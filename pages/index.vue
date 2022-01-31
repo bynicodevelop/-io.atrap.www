@@ -1,10 +1,5 @@
 <template>
   <div>
-    <SimpleNotif
-      :show="paramsNotif.show"
-      :title="paramsNotif.title"
-      :subtitle="paramsNotif.subtitle"
-    />
     <div v-track-pageview class="relative bg-white overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div
@@ -524,17 +519,18 @@ const navigation = [
 
 const { isAuthenticated, isLogin } = useLogin();
 
+const { onSuccess } = useNotification();
+
 const {
   email,
   emailError,
   isLoading,
   isStarted,
-  paramsNotif,
   onEmailBlur,
   onEmailFocus,
   onSubmit,
   scrollToElement,
-} = useNewsletter();
+} = useNewsletter({ onSuccess });
 
 onMounted(async () => await isLogin());
 </script>
