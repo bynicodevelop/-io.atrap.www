@@ -97,7 +97,7 @@
                     {{ tweet.possibilities }}
                   </p>
                   <button
-                    v-if="!$date.isHappened(tweet.publishedAt)"
+                    v-if="!$date.isHappened(tweet.publishedAt) && enabled"
                     @click="onPublish(tweet)"
                     class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-2"
                   >
@@ -132,10 +132,7 @@
                   />
                 </div>
                 <div
-                  v-else-if="
-                    $date.isHappened(tweet.publishedAt) &&
-                    tweet.status != 'cancled'
-                  "
+                  v-else-if="tweet.status != 'published'"
                   class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
                 >
                   <CalendarIcon
@@ -143,11 +140,7 @@
                     aria-hidden="true"
                   />
                   <p>
-                    {{
-                      $date.isHappened(tweet.publishedAt)
-                        ? "Publié"
-                        : "Sera publié"
-                    }}
+                    Sera publié
                     {{ " " }}
                     <time :datetime="tweet.publishedAt">{{
                       $date.humanize(tweet.publishedAt)

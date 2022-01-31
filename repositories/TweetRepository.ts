@@ -108,7 +108,9 @@ export default class TweetRepository {
     async deleteTweet(projectId: string, tweetId: string): Promise<void> {
         const docRef = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/tweets`, tweetId);
 
-        await deleteDoc(docRef);
+        await updateDoc(docRef, {
+            status: 'deleted',
+        });
     }
 
     async sendTweet(projectId: string, tweetId: string): Promise<void> {
