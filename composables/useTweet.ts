@@ -4,7 +4,7 @@ export const useTweet = ({ onSuccess }) => {
     const route = useRoute();
     const tweetRepository = <TweetRepository>useState('tweetRepository').value;
 
-    const { projectid } = route.params;
+    const { projectid, id } = route.params;
 
     const tweetToDelete = ref(null);
     const openPlanner = ref(false);
@@ -14,6 +14,7 @@ export const useTweet = ({ onSuccess }) => {
     const date = ref([]);
 
     const tweets = ref([]);
+    const tweet = ref({});
 
     const onCreateTweet = async () => {
         isLoading.value = true;
@@ -22,7 +23,7 @@ export const useTweet = ({ onSuccess }) => {
             projectId: projectid,
             content: content.value,
             startAt: date.value[0],
-            endAt: date.value[0],
+            endAt: date.value[1],
         });
 
         content.value = '';
@@ -31,6 +32,12 @@ export const useTweet = ({ onSuccess }) => {
         openPlanner.value = false;
 
         isLoading.value = false;
+    }
+
+    const getTweetSelected = async () => {
+        tweetRepository.getTweetById(projectid as string, id as string, (data) => {
+            tweet.value = data;
+        })
     }
 
     const getTweets = async () => {
@@ -60,12 +67,14 @@ export const useTweet = ({ onSuccess }) => {
         content,
         possibilities,
         date,
+        tweet,
         tweets,
         isLoading,
         tweetToDelete,
         onCreateTweet,
         getTweets,
         onChangePublishStatus,
+        getTweetSelected,
         onDelete,
     }
 }

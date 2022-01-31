@@ -57,27 +57,39 @@ export default class TweetRepository {
         }
     }
 
+    getTweetById(projectId: string, tweetId: string, cb: Function): void {
+        const docRef = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/tweets`, tweetId);
+
+        onSnapshot(docRef, (values) => {
+            cb({
+                ...values.data(),
+                id: values.id,
+                ref: values.ref,
+            })
+        })
+    }
+
     async getTweetsById(projectId: string, tweetId: string, cb: Function): Promise<void> {
         const tweetModel = await this.getTweet(projectId, tweetId);
 
         const tweetsColRef = collection(this.firestore, `tweets`);
 
-        const p = query(tweetsColRef, where("tweetRef", "==", tweetModel.ref));
+        const p = query(tweetsColRef, where("tweetRef", "==", tweetModel.ref), orderBy("publishedAt", "asc"));
 
         await onSnapshot(p, (values) => {
             const dataModel = values.docs.map((doc) => {
-                const { content, publishedAt, tweetRef } = doc.data();
+                const { content, publishedAt, tweetRef, status } = doc.data();
 
                 return {
                     content,
-                    status: publishedAt < publishedAt.seconds ? 'published' : '',
+                    status: status ?? '',
                     publishedAt: !publishedAt ? new Date().getTime() : publishedAt.seconds,
                     tweetRef: tweetRef.path,
                     id: doc.id,
                 }
             });
 
-            cb({ dataModel, tweetModel });
+            cb(dataModel);
         });
     }
 
@@ -97,5 +109,13 @@ export default class TweetRepository {
         const docRef = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/tweets`, tweetId);
 
         await deleteDoc(docRef);
+    }
+
+    async sendTweet(projectId: string, tweetId: string): Promise<void> {
+        const docRef = doc(this.firestore, `tweets`, tweetId);
+
+        await updateDoc(docRef, {
+            publishedAt: serverTimestamp(),
+        });
     }
 }
