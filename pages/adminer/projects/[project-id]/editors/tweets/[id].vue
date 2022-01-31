@@ -53,17 +53,30 @@
                 </p>
                 <div class="ml-2 flex-shrink-0 flex">
                   <p
+                    v-if="tweet.status != 'cancled'"
                     :class="`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  ${
-                      $date.isHappened(tweet.publishedAt)
+                      tweet.status == 'published'
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
                     }`"
                   >
                     {{
-                      $date.isHappened(tweet.publishedAt)
+                      tweet.status == "published"
                         ? "Publié"
-                        : "En attente"
+                        : $date.isHappened(tweet.publishedAt)
+                        ? "Publication en cours..."
+                        : "Plannifié"
                     }}
+                  </p>
+                  <p
+                    v-else
+                    :class="`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  ${
+                      tweet.status == 'published'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`"
+                  >
+                    Annulé
                   </p>
                 </div>
               </div>
@@ -84,7 +97,7 @@
                     {{ tweet.possibilities }}
                   </p>
                   <button
-                    v-if="!$date.isHappened(tweet.publishedAt)"
+                    v-if="!$date.isHappened(tweet.publishedAt) && enabled"
                     @click="onPublish(tweet)"
                     class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-2"
                   >
@@ -107,6 +120,19 @@
                   </button>
                 </div>
                 <div
+                  v-if="
+                    tweet.status == 'unpublished' &&
+                    $date.isHappened(tweet.publishedAt)
+                  "
+                  class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
+                >
+                  <RefreshIcon
+                    class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div
+                  v-else-if="tweet.status != 'published'"
                   class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
                 >
                   <CalendarIcon
@@ -114,11 +140,23 @@
                     aria-hidden="true"
                   />
                   <p>
-                    {{
-                      $date.isHappened(tweet.publishedAt)
-                        ? "Publié"
-                        : "Sera publié"
-                    }}
+                    Sera publié
+                    {{ " " }}
+                    <time :datetime="tweet.publishedAt">{{
+                      $date.humanize(tweet.publishedAt)
+                    }}</time>
+                  </p>
+                </div>
+                <div
+                  v-else
+                  class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0"
+                >
+                  <CalendarIcon
+                    class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <p>
+                    Aurait été publié
                     {{ " " }}
                     <time :datetime="tweet.publishedAt">{{
                       $date.humanize(tweet.publishedAt)
@@ -140,6 +178,7 @@ import { Switch } from "@headlessui/vue";
 import {
   CloudUploadIcon,
   CalendarIcon,
+  RefreshIcon,
   TrashIcon,
   PlayIcon,
   PauseIcon,
@@ -155,14 +194,18 @@ const enabled = ref(false);
 
 const { $date } = useNuxtApp();
 
-const { tweet, tweets, getTweets, onPublish, onDelete } = useTweetPlanned({
+const { tweets, getTweets, onPublish, onDelete } = useTweetPlanned({
   onSuccess,
 });
 
-const { onChangePublishStatus } = useTweet({ onSuccess });
+const { tweet, onChangePublishStatus, getTweetSelected } = useTweet({
+  onSuccess,
+});
 
 onMounted(async () => {
   await getTweets();
+
+  getTweetSelected();
 });
 
 watch(tweet, async (value) => {

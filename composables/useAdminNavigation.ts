@@ -1,4 +1,4 @@
-import { AdjustmentsIcon, HomeIcon, PencilAltIcon } from "@heroicons/vue/outline";
+import { AdjustmentsIcon, HomeIcon, PencilAltIcon } from "@heroicons/vue/outline/index.js";
 
 export const useAdminNavigation = () => {
     const route = useRoute();

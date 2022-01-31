@@ -76,6 +76,7 @@
                 </p>
                 <div class="ml-2 flex-shrink-0 flex">
                   <p
+                    v-if="tweet.status !== 'deleted'"
                     :class="`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  ${
                       tweet.status !== 'planned'
                         ? 'bg-orange-100 text-orange-800'
@@ -87,6 +88,12 @@
                         ? "Plannification en cours..."
                         : "Plannifié"
                     }}
+                  </p>
+                  <p
+                    v-else
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-red-800"
+                  >
+                    Suppression en cours
                   </p>
                 </div>
               </div>
@@ -106,6 +113,7 @@
                     {{ tweet.possibilities }}
                   </p>
                   <button
+                    v-if="tweet.status == 'planned'"
                     @click.prevent="onChangePublishStatus(tweet)"
                     type="button"
                     class="flex items-center text-sm text-gray-500 ml-2"
@@ -123,7 +131,7 @@
                     Statut
                   </button>
                   <button
-                    v-if="tweet.status != 'published'"
+                    v-if="tweet.status == 'planned'"
                     @click.prevent="confirmDeletion(tweet)"
                     class="mt-2 flex items-center text-sm text-rose-500 sm:mt-0 sm:ml-2"
                   >

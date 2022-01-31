@@ -1,4 +1,6 @@
-import emitter from "tiny-emitter/instance";
+import Emitter from "tiny-emitter";
+
+const emitter = new Emitter();
 
 export const useNotification = () => {
     const $on = (...args) => emitter.on(...args);
