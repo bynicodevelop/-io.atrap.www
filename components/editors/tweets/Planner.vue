@@ -33,10 +33,10 @@
     >
       <button
         @click="$emit('onSend')"
-        :disabled="!date"
+        :disabled="!isValid"
         type="button"
         :class="`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm ${
-          !date ? 'opacity-50 cursor-not-allowed' : ''
+          !isValid ? 'opacity-50 cursor-not-allowed' : ''
         }`"
       >
         Plannifier
@@ -67,6 +67,8 @@ const props = defineProps({
   },
 });
 
+const isValid = ref(false);
+
 const emits = defineEmits(["onCanel", "onSend", "update:date"]);
 
 const date = computed({
@@ -74,6 +76,9 @@ const date = computed({
     return props.date;
   },
   set(value) {
+    value.filter((date) => date !== null).length === 2 &&
+      (isValid.value = true);
+
     emits("update:date", value);
   },
 });
