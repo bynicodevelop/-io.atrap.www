@@ -12,7 +12,16 @@ const maxChar = charRate - creditLength;
 export const generateTweets = (content: string, possibilities: number) => {
     const tweets = [];
 
-    while (tweets.length < possibilities) {
+    const security = 2000;
+    let i = 0;
+
+    while (tweets.length < possibilities && security > i) {
+        i++;
+
+        if (i == security) {
+            console.log("limited");
+        }
+
         const tweet = spin(content);
 
         if (tweets.findIndex(t => t.tweet === tweet) === -1) {
