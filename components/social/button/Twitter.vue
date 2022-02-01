@@ -23,10 +23,7 @@
       Connecter Twitter
     </button>
   </span>
-  <span
-    v-if="hasTwitterConnector"
-    class="ml-4 flex-shrink-0 grid content-center"
-  >
+  <span v-if="hasTwitterConnector" class="flex-shrink-0 grid content-center">
     <button
       @click="onRevokeConnector('twitter')"
       type="button"
@@ -117,11 +114,17 @@ const onCheckTwitterConnect = async (
 };
 
 const redirectAfterSave = () => {
-  const hash = route.hash;
-  router.push({
+  const { hash } = route;
+
+  let params: any = {
     query: {},
-    hash,
-  });
+  };
+
+  if (!hash.includes("undefined")) {
+    params = { ...params, hash };
+  }
+
+  router.push(params);
 };
 
 const onRevokeConnector = async (connectorName: string) => {

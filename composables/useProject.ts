@@ -7,10 +7,15 @@ export const useProject = ({ onSuccess }) => {
     const { projectid } = route.params;
 
     const project = ref({});
+    const connectors = ref([]);
+    const projectLoaded = ref(false);
 
     const getProject = () => {
         projectRepository.getProject(projectid as string, (projectModel) => {
+            connectors.value = projectModel.connectors;
             project.value = projectModel;
+
+            projectLoaded.value = true;
         });
     }
 
@@ -20,9 +25,15 @@ export const useProject = ({ onSuccess }) => {
         onSuccess("Succès", "Les modifications ont été enregistrées.");
     }
 
+    const getConnector = (connectorId: string) => {
+        return connectors.value.find(c => c.id === connectorId);
+    }
+
     return {
+        projectLoaded,
         project,
         getProject,
         updateProject,
+        getConnector,
     }
 }
