@@ -208,6 +208,8 @@ onMounted(async () => {
   getTweetSelected();
 });
 
+const isHappened = (date) => new Date(date).getTime() < new Date().getTime();
+
 watch(tweet, async (value) => {
   enabled.value = value.publishStatus;
 });

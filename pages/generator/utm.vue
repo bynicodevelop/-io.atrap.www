@@ -364,6 +364,8 @@ const utmSource = [
   "newsletter",
   "youtube",
   "github",
+  "google",
+  "website",
 ];
 
 const utmMedium = [
