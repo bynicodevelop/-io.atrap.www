@@ -41,6 +41,11 @@
         <div class="flex">
           <span class="text-sm text-gray-500 group-hover:text-gray-600 italic">
             {{ possibilities }} tweets possibles
+            <span v-if="excludedTweets"
+              >({{ excludedTweets }} exclu{{
+                excludedTweets < 2 ? "" : "s"
+              }})</span
+            >
           </span>
         </div>
 
@@ -61,7 +66,7 @@
 </template>
 
 <script setup>
-import { tweetPossibilities } from "~/utils/tweetPossibilities";
+import { tweetPossibilities, generateTweets } from "~/utils/tweetPossibilities";
 
 const props = defineProps({
   content: {
@@ -80,6 +85,8 @@ const emits = defineEmits([
   "update:content",
 ]);
 
+const excludedTweets = ref(0);
+
 const possibilities = computed({
   get() {
     return props.possibilities;
@@ -89,16 +96,37 @@ const possibilities = computed({
   },
 });
 
+const debouce = () => {
+  let timeout = null;
+
+  return function (fnc, delayMs) {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      fnc();
+    }, delayMs || 500);
+  };
+};
+
+let timeout = null;
+
 const content = computed({
   get() {
     return props.content;
   },
   set(value) {
-    emits(
-      "update:possibilities",
-      tweetPossibilities(value, props.possibilities)
-    );
-    emits("update:content", value);
+    clearTimeout(timeout);
+
+    timeout = setTimeout(function () {
+      const possibilities = tweetPossibilities(value, props.possibilities);
+
+      const tweets = generateTweets(value, possibilities);
+
+      excludedTweets.value = tweets.filter((tweet) => tweet.excluded).length;
+
+      emits("update:possibilities", tweetPossibilities(value, possibilities));
+      emits("update:content", value);
+    }, 500);
   },
 });
 

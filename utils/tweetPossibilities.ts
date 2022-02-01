@@ -1,5 +1,30 @@
 import { isEmpty } from "lodash";
 import { evaluate } from "mathjs";
+import spin from "@bob6664569/content-spinner";
+
+const charRate = 280;
+
+const credit = " @byatrap.io";
+const creditLength = credit.length;
+
+const maxChar = charRate - creditLength;
+
+export const generateTweets = (content: string, possibilities: number) => {
+    const tweets = [];
+
+    while (tweets.length < possibilities) {
+        const tweet = spin(content);
+
+        if (tweets.findIndex(t => t.tweet === tweet) === -1) {
+            tweets.push({
+                tweet,
+                excluded: tweet.length > maxChar,
+            });
+        }
+    }
+
+    return tweets;
+}
 
 export const tweetPossibilities = (
     value: string,

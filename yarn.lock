@@ -272,6 +272,11 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
+"@bob6664569/content-spinner@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@bob6664569/content-spinner/-/content-spinner-0.1.1.tgz#b979bb378297a35dee1ea03dfc43d0b8342ef4b8"
+  integrity sha512-fe/KS2tzSAJor5Yvi2NVa7GwgkIrF5qQU6W3zLtaZxbVMwR89kAadbuGY1afqQ33HfmzPRx6SbAmA13H/7gxWg==
+
 "@cloudflare/kv-asset-handler@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.2.0.tgz#c9959bbd7a1c40bd7c674adae98aa8c8d0e5ca68"
