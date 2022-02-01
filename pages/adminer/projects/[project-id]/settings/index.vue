@@ -16,6 +16,7 @@
         <div class="lg:hidden">
           <label for="selected-tab" class="sr-only">Select a tab</label>
           <select
+            @change="onTabChange($event)"
             id="selected-tab"
             name="selected-tab"
             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md"
@@ -130,6 +131,12 @@ const onUpdate = async () => {
 
 const onSelectTab = (tab: any) => {
   tabSelected.value = tab;
+};
+
+const onTabChange = (event: any) => {
+  const { value } = event.target;
+
+  tabSelected.value = tabs.find((t) => t.name == value);
 };
 
 const clearNotifications = () => {
