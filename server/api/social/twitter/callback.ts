@@ -5,7 +5,7 @@ import { TwitterApi } from 'twitter-api-v2';
 export default async (req, res) => {
   const query = await useQuery(req)
 
-  const cookie = useCookie(req, 'social-connect');
+  const cookie = useCookie(req, '__session');
 
   const { oauth_token, oauth_verifier } = <{ oauth_token: string, oauth_verifier: string }>query;
 

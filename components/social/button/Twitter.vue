@@ -48,7 +48,7 @@ const props = defineProps({
 const socialConnectCookie = useCookie<{
   twitterToker: string;
   redirectUrl: string;
-}>("social-connect", {
+}>("__session", {
   maxAge: 60 * 60 * 24 * 365,
   path: "/",
 });
