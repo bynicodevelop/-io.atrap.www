@@ -108,6 +108,8 @@ onMounted(() => onResize());
 
 const onResize = () => {
   textarea.value.style.height = `auto`;
-  textarea.value.style.height = `${textarea.value.scrollHeight}px`;
+  textarea.value.style.height = `${
+    textarea.value.scrollHeight < 90 ? 90 : textarea.value.scrollHeight
+  }px`;
 };
 </script>
