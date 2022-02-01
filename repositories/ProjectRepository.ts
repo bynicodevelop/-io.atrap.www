@@ -61,8 +61,6 @@ export default class ProjectRepository {
     }
 
     async updateProject(project: any) {
-        console.log(project);
-
         const { id, name, description } = project;
 
         const projectDoc = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects`, id);

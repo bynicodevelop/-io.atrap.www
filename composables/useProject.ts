@@ -1,6 +1,6 @@
 import ProjectRepository from "~~/repositories/ProjectRepository";
 
-export const useProject = () => {
+export const useProject = ({ onSuccess }) => {
     const route = useRoute();
     const projectRepository = <ProjectRepository>useState('projectRepository').value;
 
@@ -16,6 +16,8 @@ export const useProject = () => {
 
     const updateProject = async () => {
         await projectRepository.updateProject(project.value);
+
+        onSuccess("Succès", "Les modifications ont été enregistrées.");
     }
 
     return {

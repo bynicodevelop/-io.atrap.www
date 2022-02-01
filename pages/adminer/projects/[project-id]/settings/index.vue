@@ -1,12 +1,5 @@
 <template>
   <div>
-    <SimpleNotif
-      :show="paramsNotif.show"
-      :title="paramsNotif.title"
-      :subtitle="paramsNotif.subtitle"
-      :timeout="10000"
-    />
-
     <div class="px-4 sm:px-6 md:px-0">
       <h1 class="text-3xl font-extrabold text-gray-900">Settings</h1>
     </div>
@@ -64,90 +57,23 @@
 </template>
 
 <script setup lang="ts">
-const { project, getProject, updateProject } = useProject();
-
-const { SITE_URL } = useRuntimeConfig();
-
-definePageMeta({
-  layout: "admin",
-});
-
-const { $fire } = useNuxtApp();
-const route = useRoute();
-const cookies = useCookie("__session");
-
 const tabs = [
   { name: "General", href: "#general", current: true },
   { name: "Connexion social", href: "#social-connect", current: false },
 ];
 
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-}
+const { tabSelected, onSelectIndex, onSelectTab, onTabChange } =
+  useSettingsTabManager(tabs);
+const { onSuccess } = useNotification();
+const { project, getProject, updateProject } = useProject({ onSuccess });
 
-const { hash } = route;
-
-const tabSelected = ref(tabs[0]);
+definePageMeta({
+  layout: "admin",
+});
 
 onMounted(async () => {
   await getProject();
 
   onSelectIndex();
 });
-
-const paramsNotif = reactive({
-  show: false,
-  title: "",
-  subtitle: "",
-});
-
-watch(route, (value) => {
-  const { hash } = value;
-
-  tabs.forEach((t) => {
-    t.current = t.href == hash;
-  });
-
-  tabSelected.value = tabs.find((t) => t.current);
-});
-
-const onSelectIndex = () => {
-  tabs.forEach((t) => {
-    t.current = t.href == (hash || "#general");
-  });
-
-  tabSelected.value = tabs.find((t) => t.current);
-};
-
-const onUpdate = async () => {
-  clearNotifications();
-
-  await projectRepository.updateProject(project);
-
-  sendNotification("Vos données ont été mises à jour");
-};
-
-const onSelectTab = (tab: any) => {
-  tabSelected.value = tab;
-};
-
-const onTabChange = (event: any) => {
-  const { value } = event.target;
-
-  tabSelected.value = tabs.find((t) => t.name == value);
-};
-
-const clearNotifications = () => {
-  paramsNotif.show = false;
-  paramsNotif.title = "";
-  paramsNotif.subtitle = "";
-};
-
-const sendNotification = (message: string) => {
-  paramsNotif.show = true;
-  paramsNotif.title = "Notification";
-  paramsNotif.subtitle = message;
-};
 </script>
