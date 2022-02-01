@@ -4,7 +4,7 @@ import spin from "@bob6664569/content-spinner";
 
 const charRate = 280;
 
-const credit = " @byatrap.io";
+const credit = " @byatrapio";
 const creditLength = credit.length;
 
 const maxChar = charRate - creditLength;
