@@ -40,23 +40,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { InformationCircleIcon } from "@heroicons/vue/outline/index.js";
 
-const cookies = <any>useCookie("__session", {
-  maxAge: 60 * 60 * 24 * 365,
-  path: "/",
-});
-
-const { cookieConsent = false } = cookies.value ?? {};
-
-const hideCookieBanner = ref(cookieConsent);
-
-const onClick = () => {
-  hideCookieBanner.value = true;
-
-  const c = cookies.value;
-
-  cookies.value = <any>{ ...c, ...{ cookieConsent: hideCookieBanner } };
-};
+const { hideCookieBanner, onClick } = useCookieBanner();
 </script>

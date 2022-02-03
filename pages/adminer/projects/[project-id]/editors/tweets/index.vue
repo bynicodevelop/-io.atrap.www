@@ -273,6 +273,13 @@ watch(
   }
 );
 
+watch(
+  () => content,
+  async (value) => {
+    console.log(value);
+  }
+);
+
 const onTwitterConnect = () => {
   onSuccess(
     "Connexion en cours...",
