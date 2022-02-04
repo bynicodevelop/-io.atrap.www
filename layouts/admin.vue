@@ -186,17 +186,7 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 
-import {
-  BellIcon,
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
-  MenuAlt2Icon,
-  UsersIcon,
-  XIcon,
-} from "@heroicons/vue/outline/index.js";
+import { MenuAlt2Icon, XIcon } from "@heroicons/vue/outline/index.js";
 
 import { SearchIcon, AdjustmentsIcon } from "@heroicons/vue/solid/index.js";
 

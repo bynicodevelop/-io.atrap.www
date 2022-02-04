@@ -4,35 +4,43 @@ export const useAdminNavigation = () => {
     const route = useRoute();
     const router = useRouter();
 
-    const navigation = [
-        {
-            pathName: "adminer-projects-projectid",
-            name: "Tableau de bord",
-            href: `/adminer/projects/${route.params["projectid"]}`,
-            icon: HomeIcon,
-            current: true,
-        },
-        {
-            pathName: "adminer-projects-projectid-editors-tweets",
-            name: "Éditeur de tweets",
-            href: `/adminer/projects/${route.params["projectid"]}/editors/tweets`,
-            icon: PencilAltIcon,
-        },
-        {
-            pathName: "adminer-projects-projectid-settings",
-            name: "Paramètres",
-            href: `/adminer/projects/${route.params["projectid"]}/settings`,
-            icon: AdjustmentsIcon,
-        },
-    ];
+    const navigation = ref([]);
 
-    for (let i = 0; i < navigation.length; i++) {
-        navigation[i].current = navigation[i].pathName === route.name;
-    }
+    onMounted(() => {
+        console.log("monted");
+
+        navigation.value = [
+            {
+                pathName: "adminer-projects-projectid",
+                name: "Tableau de bord",
+                path: '',
+                icon: HomeIcon,
+                current: true,
+            },
+            {
+                pathName: "adminer-projects-projectid-editors-tweets",
+                name: "Éditeur de tweets",
+                path: `/editors/tweets`,
+                icon: PencilAltIcon,
+            },
+            {
+                pathName: "adminer-projects-projectid-settings",
+                name: "Paramètres",
+                path: `/settings`,
+                icon: AdjustmentsIcon,
+            },
+        ];
+
+        for (let i = 0; i < navigation.value.length; i++) {
+            navigation.value[i].href = `/adminer/projects/${route.params["projectid"]}${navigation.value[i].path}`;
+            navigation.value[i].current = navigation.value[i].pathName === route.name;
+        }
+    })
 
     watch(router.currentRoute, (to) => {
-        navigation.forEach((item) => {
-            item.current = item.href === to.path;
+        navigation.value.forEach((item) => {
+            item.href = `/adminer/projects/${route.params["projectid"]}${item.path}`;
+            item.current = `/adminer/projects/${route.params["projectid"]}${item.href}` === to.path;
         });
     });
 
