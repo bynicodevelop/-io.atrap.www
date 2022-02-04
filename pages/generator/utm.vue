@@ -1,11 +1,5 @@
 <template>
   <div class="bg-white">
-    <SimpleNotif
-      :show="paramsNotif.show"
-      :title="paramsNotif.title"
-      :subtitle="paramsNotif.subtitle"
-    />
-
     <Popover as="header" class="relative">
       <div class="bg-warm-gray-50">
         <nav
@@ -356,6 +350,8 @@ const navigation = [
   // { name: "Changelog", href: "#" }
 ];
 
+const { onSuccess } = useNotification();
+
 const utmSource = [
   "facebook",
   "twitter",
@@ -397,12 +393,6 @@ const utmMediumValue = ref("");
 const utmCampaignValue = ref("");
 const utmIdValue = ref("");
 const resultValue = ref("");
-
-const paramsNotif = reactive({
-  show: false,
-  title: "",
-  subtitle: "",
-});
 
 const refInputValue = ref(null);
 
@@ -523,10 +513,10 @@ const copy = async () => {
     document.execCommand("copy");
   }
 
-  paramsNotif.show = true;
-  paramsNotif.title = "Contenu copié 💪";
-  paramsNotif.subtitle =
-    "Vous pouvez dès maintenant le partager dans vos contenus favoris.";
+  onSuccess(
+    "Contenu copié 💪",
+    "Vous pouvez dès maintenant le partager dans vos contenus favoris."
+  );
 };
 
 async function onCopy() {
@@ -536,10 +526,6 @@ async function onCopy() {
 }
 
 async function onFocus() {
-  paramsNotif.show = false;
-  paramsNotif.title = "";
-  paramsNotif.subtitle = "";
-
   if (refInputValue.value.value == "") return;
 
   refInputValue.value.select();

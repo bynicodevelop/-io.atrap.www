@@ -32,6 +32,7 @@ export default defineNuxtConfig({
     STORAGE_BUCKET: process.env.STORAGE_BUCKET,
     MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
     APP_ID: process.env.APP_ID,
+    COOKIE_NAME: process.env.COOKIE_NAME,
   },
   privateRuntimeConfig: {
     NUXT_APP_MAILCHIMP_API_KEY: process.env.NUXT_APP_MAILCHIMP_API_KEY,

@@ -7,6 +7,7 @@ const schema = yup.object().shape({
 });
 
 export const useLogin = () => {
+    const { onError } = useNotification()
     const router = useRouter();
 
     const isAuthenticated = ref(false);
@@ -19,20 +20,9 @@ export const useLogin = () => {
 
     const isLoading = ref(false);
 
-    const paramsNotif = reactive({
-        show: false,
-        title: "",
-        subtitle: "",
-        type: "",
-    });
-
     const userRepository = <UserRepository>useState("userRepository").value;
 
     const onSubmit = async () => {
-        paramsNotif.show = false;
-        paramsNotif.title = "";
-        paramsNotif.subtitle = "";
-
         emailError.value = false;
         passwordError.value = false;
 
@@ -64,10 +54,7 @@ export const useLogin = () => {
         } catch (error) {
             if (!error.errors) {
                 if (error.message === "user-not-found") {
-                    paramsNotif.show = true;
-                    paramsNotif.title = "Erreur";
-                    paramsNotif.subtitle = "Vos identifiants ne sont pas corrects.";
-                    paramsNotif.type = "error";
+                    onError("Erreur", "Vos identifiants ne sont pas corrects.");
                 }
             } else {
                 error.errors.forEach((error) => {
@@ -94,7 +81,6 @@ export const useLogin = () => {
         emailError,
         password,
         passwordError,
-        paramsNotif,
         isAuthenticated,
         onSubmit,
         isLogin,

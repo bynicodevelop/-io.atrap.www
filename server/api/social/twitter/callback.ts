@@ -9,7 +9,7 @@ export default async (req, res) => {
 
   const { oauth_token, oauth_verifier } = <{ oauth_token: string, oauth_verifier: string }>query;
 
-  const { twitterToken, redirectSocialUrl } = JSON.parse(
+  const { twitter_connect: { twitterToken, redirectSocialUrl } } = JSON.parse(
     cookie ?? "{}"
   );
 

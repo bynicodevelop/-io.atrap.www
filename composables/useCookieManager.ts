@@ -6,6 +6,7 @@ export const useCookieManager = () => {
 
     const cookie = <CookieRef<{}>>useCookie(COOKIE_NAME, {
         maxAge: 1000 * 60 * 60 * 24 * 365,
+        path: '/',
     });
 
     const onSetCookie = (value: string, options: any) => cookie.value = {

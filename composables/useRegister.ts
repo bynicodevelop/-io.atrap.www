@@ -9,6 +9,7 @@ const schema = yup.object().shape({
 
 
 export const useRegister = () => {
+    const { onError } = useNotification();
     const router = useRouter();
 
     const email = ref("");
@@ -19,20 +20,9 @@ export const useRegister = () => {
 
     const isLoading = ref(false);
 
-    const paramsNotif = reactive({
-        show: false,
-        title: "",
-        subtitle: "",
-        type: "",
-    });
-
     const userRepository = <UserRepository>useState("userRepository").value;
 
     const onSubmit = async () => {
-        paramsNotif.show = false;
-        paramsNotif.title = "";
-        paramsNotif.subtitle = "";
-
         emailError.value = false;
         passwordError.value = false;
 
@@ -64,11 +54,7 @@ export const useRegister = () => {
         } catch (error) {
             if (!error.errors) {
                 if (error.message === "email-already-in-use") {
-                    paramsNotif.show = true;
-                    paramsNotif.title = "Erreur";
-                    paramsNotif.subtitle =
-                        "Vous ne pouvez pas créer de compte avec ces identifiants.";
-                    paramsNotif.type = "error";
+                    onError("Erreur", "Vous ne pouvez pas créer de compte avec ces identifiants.");
                 }
             } else {
                 error.errors.forEach((error) => {
@@ -89,7 +75,6 @@ export const useRegister = () => {
         emailError,
         password,
         passwordError,
-        paramsNotif,
         onSubmit,
     }
 }

@@ -1,13 +1,5 @@
 <template>
   <div>
-    <SimpleNotif
-      :show="paramsNotif.show"
-      :title="paramsNotif.title"
-      :subtitle="paramsNotif.subtitle"
-      :timeout="5000"
-      :type="paramsNotif.type"
-    />
-
     <SettingsTabHeading>
       <template v-slot:title> Connexion social </template>
       <template v-slot:description>
@@ -34,12 +26,8 @@
 </template>
 
 <script setup lang="ts">
-// const router = useRouter();
-// const route = useRoute();
-
 import { isEmpty, isUndefined } from "lodash";
-
-// const { $fire } = useNuxtApp();
+const { onSuccess } = useNotification();
 
 const props = defineProps({
   modelValue: {
@@ -50,18 +38,11 @@ const props = defineProps({
 
 const twitterConnector = ref(null);
 
-const paramsNotif = ref({
-  show: false,
-  title: "",
-  subtitle: "",
-});
-
 const onTwitterConnect = (): void => {
-  paramsNotif.value = {
-    show: true,
-    title: "Connexion en cours...",
-    subtitle: "Merci de patienter. Nous vous connectons à Twitter.",
-  };
+  onSuccess(
+    "Connexion en cours...",
+    "Merci de patienter. Nous vous connectons à Twitter."
+  );
 };
 
 onMounted(() => {

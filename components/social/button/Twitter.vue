@@ -34,7 +34,19 @@
   </span>
 </template>
 
-<script setup lang="ts">
+<script setup>
+const route = useRoute();
+
+const emits = defineEmits(["onTwitterConnect"]);
+
+const {
+  isTwitterLoading,
+  hasTwitterConnector,
+  onTwitterConnect,
+  onRevokeConnector,
+  onCheckTwitterConnect,
+} = useTwitterConnect({ emits });
+
 const props = defineProps({
   connector: {
     type: Object,
@@ -42,26 +54,7 @@ const props = defineProps({
   },
 });
 
-const socialConnectCookie = useCookie<{
-  twitterToker: string;
-  redirectUrl: string;
-}>("__session", {
-  maxAge: 60 * 60 * 24 * 365,
-  path: "/",
-});
-
-const { SITE_URL } = useRuntimeConfig();
-
 const { $fire } = useNuxtApp();
-
-const router = useRouter();
-const route = useRoute();
-
-const emits = defineEmits(["onTwitterConnect"]);
-
-const isTwitterLoading = ref(false);
-
-const hasTwitterConnector = ref(false);
 
 watch(
   () => props.connector,
@@ -70,98 +63,11 @@ watch(
   }
 );
 
-const onTwitterConnect = async (): Promise<void> => {
-  isTwitterLoading.value = true;
-
-  emits("onTwitterConnect");
-
-  const { data } = await useFetch(`${SITE_URL}/api/social/twitter/connect`);
-
-  const { url, oauth_token } = data.value;
-
-  socialConnectCookie.value = {
-    twitterToken: oauth_token,
-    redirectSocialUrl: `${SITE_URL}${route.fullPath}`,
-  };
-
-  window.location.href = url;
-};
-
-const onCheckTwitterConnect = async (
-  { accessSecret, accessToken, name, profile_image_url, screenName, userId },
-  projectid,
-  socialConnectRepository
-): Promise<void> => {
-  try {
-    await socialConnectRepository.setTwitterConnect({
-      accessSecret,
-      accessToken,
-      name,
-      profileImageUrl: profile_image_url,
-      screenName,
-      userId,
-      projectId: projectid,
-    });
-
-    console.log("Twitter connect success");
-
-    redirectAfterSave();
-
-    hasTwitterConnector.value = true;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const redirectAfterSave = () => {
-  const { hash } = route;
-
-  let params: any = {
-    query: {},
-  };
-
-  if (!hash.includes("undefined")) {
-    params = { ...params, hash };
-  }
-
-  router.push(params);
-};
-
-const onRevokeConnector = async (connectorName: string) => {
-  const { projectid } = route.params;
-
-  const { auth, firestore } = $fire;
-
-  const socialConnectRepository = useSocialConnectRepository({
-    auth,
-    firestore,
-  });
-
-  if (connectorName === "twitter") {
-    await socialConnectRepository.revokeTwitterConnect(projectid);
-
-    hasTwitterConnector.value = false;
-  }
-};
-
-await onMounted(async () => {
+onMounted(async () => {
   hasTwitterConnector.value = !!props.connector;
 
-  const { projectid } = route.params;
+  if (hasTwitterConnector.value) return;
 
-  const { auth, firestore } = $fire;
-
-  const socialConnectRepository = useSocialConnectRepository({
-    auth,
-    firestore,
-  });
-
-  if (!hasTwitterConnector.value && Object.keys(route.query).length > 0) {
-    await onCheckTwitterConnect(
-      route.query,
-      projectid,
-      socialConnectRepository
-    );
-  }
+  await onCheckTwitterConnect();
 });
 </script>
