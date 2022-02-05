@@ -76,6 +76,14 @@ export const useLogin = () => {
         isAuthenticated.value = !!user;
     };
 
+    const onLogout = async () => {
+        await userRepository.logout();
+
+        router.push({
+            name: "auth",
+        });
+    }
+
     return {
         email,
         emailError,
@@ -84,5 +92,6 @@ export const useLogin = () => {
         isAuthenticated,
         onSubmit,
         isLogin,
+        onLogout,
     }
 }

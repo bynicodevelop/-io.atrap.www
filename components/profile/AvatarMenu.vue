@@ -39,7 +39,17 @@
             v-slot="{ active }"
           >
             <a
-              @click.prevent="item.href.includes('/logout') ? logout() : null"
+              v-if="item.action"
+              @click.prevent="item.action"
+              :class="[
+                active ? 'bg-gray-100' : '',
+                'block px-4 py-2 text-sm text-gray-700',
+              ]"
+              >{{ item.name }}</a
+            >
+
+            <a
+              v-else
               :href="item.href"
               :class="[
                 active ? 'bg-gray-100' : '',
@@ -63,17 +73,9 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 
-const userNavigation = [{ name: "Déconnexion", href: "/logout" }];
+const { onLogout } = useLogin();
 
-const userRepository = useState("userRepository").value;
-
-const router = useRouter();
-
-const logout = async () => {
-  await userRepository.logout();
-
-  router.push({
-    name: "auth",
-  });
-};
+const userNavigation = [
+  { name: "Déconnexion", href: "/logout", action: onLogout },
+];
 </script>

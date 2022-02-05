@@ -7,8 +7,6 @@ export const useAdminNavigation = () => {
     const navigation = ref([]);
 
     onMounted(() => {
-        console.log("monted");
-
         navigation.value = [
             {
                 pathName: "adminer-projects-projectid",
