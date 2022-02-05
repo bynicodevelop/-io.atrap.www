@@ -20,60 +20,71 @@
         </div>
       </div>
     </div>
-
-    <ul
-      role="list"
-      class="grid grid-cols-1 sm:grid-cols-4 gap-4"
-      v-if="typeView == typeViews.LIST_PROJECT"
-    >
-      <li
-        @click="onCreateProject"
-        class="col-span-1 flex drop-shadow-md rounded-md aspect-video hover:cursor-pointer"
-      >
-        <div
-          class="flex-1 flex items-center justify-between border border-gray-200 bg-white hover:bg-gray-100 rounded-md truncate"
-        >
-          <div class="grid grid-rows-2 w-full">
-            <div
-              class="flex-1 px-4 text-sm truncate flex justify-center items-center"
-            >
-              <PlusIcon
-                class="-ml-1 mr-2 h-5 w-5 text-gray-900"
-                aria-hidden="true"
-              />
+    <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <PlusIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
             </div>
-            <div
-              class="flex justify-center items-center flex-1 w-full text-gray-900"
-            >
-              Nouveau projet
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                  Créer un nouveau
+                </dt>
+                <dd>
+                  <div class="text-lg font-medium text-gray-900">Projet</div>
+                </dd>
+              </dl>
             </div>
           </div>
         </div>
-      </li>
+        <div class="bg-gray-50 px-5 py-3">
+          <div class="text-sm">
+            <a
+              @click="onCreateProject"
+              href="#"
+              class="font-medium text-cyan-700 hover:text-cyan-900"
+            >
+              Créer un projet
+            </a>
+          </div>
+        </div>
+      </div>
 
-      <NuxtLink
+      <div
         v-for="project in projects"
         :key="project.id"
-        :to="`/adminer/projects/${project.id}`"
+        class="bg-white overflow-hidden shadow rounded-lg"
       >
-        <li
-          class="col-span-1 flex drop-shadow-md rounded-md aspect-video hover:cursor-pointer"
-        >
-          <div
-            class="flex-1 flex items-center justify-between border border-gray-200 bg-white hover:bg-gray-100 rounded-md truncate pt-2 pl-2"
-          >
-            <div class="flex-1 px-4 pt-4 text-sm truncate h-32 min-h-full">
-              <div class="text-gray-900 font-medium text-lg">
-                {{ project.projectName }}
-              </div>
-              <div class="text-gray-500 font-medium text-xs italic">
-                {{ project.id }}
-              </div>
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                  {{ project.id }}
+                </dt>
+                <dd>
+                  <div class="text-lg font-medium text-gray-900">
+                    {{ project.projectName }}
+                  </div>
+                </dd>
+              </dl>
             </div>
           </div>
-        </li>
-      </NuxtLink>
-    </ul>
+        </div>
+        <div class="bg-gray-50 px-5 py-3">
+          <div class="text-sm">
+            <NuxtLink
+              :to="`/adminer/projects/${project.id}`"
+              class="font-medium text-cyan-700 hover:text-cyan-900"
+            >
+              Accéder
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
