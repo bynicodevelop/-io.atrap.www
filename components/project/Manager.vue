@@ -80,6 +80,9 @@
 <script setup lang="ts">
 import { PlusIcon, DotsVerticalIcon } from "@heroicons/vue/solid/index.js";
 
+const route = useRoute();
+const router = useRouter();
+
 const typeViews = {
   LOADING: "loading",
   CREATE_PROJECT: "createProject",
@@ -119,6 +122,14 @@ onMounted(async () => {
       projects.value = values;
 
       typeView.value = typeViews.LIST_PROJECT;
+
+      if (route.hash == "#create-project") {
+        onCreateProject();
+
+        router.push({
+          hash: "",
+        });
+      }
     });
   }
 });

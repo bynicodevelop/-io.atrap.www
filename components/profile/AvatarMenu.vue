@@ -48,14 +48,14 @@
               >{{ item.name }}</a
             >
 
-            <a
+            <NuxtLink
               v-else
-              :href="item.href"
+              :to="item.href"
               :class="[
                 active ? 'bg-gray-100' : '',
                 'block px-4 py-2 text-sm text-gray-700',
               ]"
-              >{{ item.name }}</a
+              >{{ item.name }}</NuxtLink
             >
           </MenuItem>
         </MenuItems>
@@ -76,6 +76,7 @@ import {
 const { onLogout } = useLogin();
 
 const userNavigation = [
-  { name: "Déconnexion", href: "/logout", action: onLogout },
+  { name: "Créer un projet", href: "/adminer#create-project" },
+  { name: "Déconnexion", href: "#", action: onLogout },
 ];
 </script>
