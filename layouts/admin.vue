@@ -46,20 +46,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  Dialog,
-  DialogOverlay,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  TransitionChild,
-  TransitionRoot,
-} from "@headlessui/vue";
+import { Menu, MenuItem } from "@headlessui/vue";
 
-import { MenuAlt2Icon, XIcon } from "@heroicons/vue/outline/index.js";
-
-import { SearchIcon, AdjustmentsIcon } from "@heroicons/vue/solid/index.js";
+import { MenuAlt2Icon } from "@heroicons/vue/outline/index.js";
 
 useMeta({
   bodyAttrs: {
