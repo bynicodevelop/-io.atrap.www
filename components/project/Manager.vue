@@ -20,7 +20,10 @@
         </div>
       </div>
     </div>
-    <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div
+      v-if="typeView == typeViews.LIST_PROJECT"
+      class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+    >
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
@@ -44,7 +47,7 @@
             <a
               @click="onCreateProject"
               href="#"
-              class="font-medium text-cyan-700 hover:text-cyan-900"
+              class="font-medium text-indigo-700 hover:text-indigo-900"
             >
               Créer un projet
             </a>
@@ -77,7 +80,7 @@
           <div class="text-sm">
             <NuxtLink
               :to="`/adminer/projects/${project.id}`"
-              class="font-medium text-cyan-700 hover:text-cyan-900"
+              class="font-medium text-indigo-700 hover:text-indigo-900"
             >
               Accéder
             </NuxtLink>
