@@ -1,4 +1,4 @@
-import { AdjustmentsIcon, HomeIcon, PencilAltIcon } from "@heroicons/vue/outline/index.js";
+import { AdjustmentsIcon, HomeIcon, PencilAltIcon, LinkIcon } from "@heroicons/vue/outline/index.js";
 
 export const useAdminNavigation = () => {
     const route = useRoute();
@@ -20,6 +20,12 @@ export const useAdminNavigation = () => {
                 name: "Éditeur de tweets",
                 path: `/editors/tweets`,
                 icon: PencilAltIcon,
+            },
+            {
+                pathName: "adminer-projects-projectid-short-url",
+                name: "Liens courts",
+                path: `/short-url`,
+                icon: LinkIcon,
             },
             {
                 pathName: "adminer-projects-projectid-settings",

@@ -1,9 +1,5 @@
 <template>
-  <div>coucou</div>
+  <div>
+    <NuxtLayout name="admin"> coucou </NuxtLayout>
+  </div>
 </template>
-
-<script setup>
-definePageMeta({
-  layout: "admin",
-});
-</script>
