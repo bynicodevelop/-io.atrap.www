@@ -12,6 +12,7 @@ export const useProject = ({ onSuccess }) => {
 
     const getProject = () => {
         projectRepository.getProject(projectid as string, (projectModel) => {
+
             connectors.value = projectModel.connectors;
             project.value = projectModel;
 

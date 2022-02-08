@@ -1,11 +1,7 @@
 <template>
   <div>
-    <ProjectManager />
+    <NuxtLayout name="project-panel">
+      <ProjectManager />
+    </NuxtLayout>
   </div>
 </template>
-
-<script setup>
-definePageMeta({
-  layout: "project-panel",
-});
-</script>

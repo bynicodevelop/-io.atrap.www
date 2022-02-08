@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <NuxtLayout name="landing">
     <div v-track-pageview class="relative bg-white overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div
@@ -499,7 +499,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
