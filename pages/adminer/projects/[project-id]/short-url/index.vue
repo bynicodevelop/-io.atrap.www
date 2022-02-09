@@ -37,7 +37,9 @@
 
         <template v-else>
           <div class="pb-4 flex-1 flex justify-end">
-            <div class="ml-4 flex items-center lg:ml-6 flex justify-end">
+            <div
+              class="ml-4 mr-4 flex items-center lg:ml-6 lg:mr-0 flex justify-end"
+            >
               <button
                 @click="openLinkEditor = true"
                 type="button"
@@ -65,7 +67,7 @@
                       href="#"
                       class="text-sm text-indigo-600 line-clamp-2 truncate"
                     >
-                      {{ link.title ?? link.url }}
+                      {{ link.title || link.url }}
                     </a>
 
                     <div class="ml-2 flex-shrink-0 flex">

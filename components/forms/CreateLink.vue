@@ -38,7 +38,7 @@
                   class="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl"
                 >
                   <div class="flex-1 h-0 overflow-y-auto">
-                    <div class="py-6 px-4 bg-indigo-700 sm:px-6">
+                    <div class="py-4 px-4 bg-indigo-700 sm:px-6">
                       <div class="flex items-center justify-between">
                         <DialogTitle class="text-lg font-medium text-white">
                           Raccourcir un lien
@@ -56,6 +56,45 @@
                       </div>
                     </div>
                     <div class="flex-1 flex flex-col justify-between">
+                      <div
+                        v-if="
+                          linkData.seo &&
+                          linkData.seo.title &&
+                          linkData.seo.image
+                        "
+                        class="space-y-2 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-x-3"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="aspect-w-16 aspect-h-9 rounded-lg"
+                        >
+                          <img
+                            :src="linkData.seo.image"
+                            :alt="linkData.seo.title"
+                            class="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div class="px-6 lg:px-0 lg:pr-2">
+                          <h3
+                            class="mt-1 text-base font-semibold text-gray-900"
+                          >
+                            {{ linkData.seo.title }}
+                          </h3>
+                          <p
+                            v-if="linkData.seo.description"
+                            class="mt-2 text-sm text-gray-500"
+                          >
+                            {{
+                              linkData.seo.description.length > 60
+                                ? `${linkData.seo.description
+                                    .substr(0, 60)
+                                    .trim()}...`
+                                : linkData.seo.description
+                            }}
+                          </p>
+                        </div>
+                      </div>
+
                       <div class="px-4 divide-y divide-gray-200 sm:px-6">
                         <div class="space-y-6 pt-6 pb-5">
                           <InputText
@@ -77,6 +116,7 @@
 
                           <div class="flex-shrink-0 px-4 py-4 flex justify-end">
                             <button
+                              v-if="linkData.id !== '' && linkData.clicks > 0"
                               type="button"
                               class="bg-white py-2 px-4 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                               @click="onResetClick(linkData)"
