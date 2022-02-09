@@ -2,7 +2,13 @@ import { isEmpty } from "lodash";
 import { useNuxtApp, useRuntimeConfig } from "nuxt3";
 import LinkRepository from "../repositories/LinkRepository";
 
-export const useLinks = ({ SITE_URL }) => {
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+    url: yup.string().url("url_field").required("url_field"),
+});
+
+export const useLinks = ({ SITE_URL }, loadingState = null) => {
     const { onSuccess } = useNotification();
     const route = useRoute();
     const linkRepository = <LinkRepository>useState('linkRepository').value;
@@ -10,12 +16,42 @@ export const useLinks = ({ SITE_URL }) => {
     const links = ref([]);
     const redirectLink = ref(null);
 
+    const urlError = ref(false);
+
     const onCreateLink = async (linkData) => {
-        console.log(route.params.projectid);
+        if (loadingState) {
+            loadingState.onStart();
+        }
+
+        try {
+            schema.validateSync(
+                {
+                    url: linkData.url,
+                },
+                { abortEarly: false }
+            );
+        } catch (error) {
+
+            error.errors.forEach((error) => {
+                if (error === "url_field") {
+                    urlError.value = true;
+                }
+            });
+
+            if (loadingState) {
+                loadingState.onError();
+            }
+
+            return;
+        }
 
         await linkRepository.createLink(route.params.projectid, {
             ...linkData
         });
+
+        if (loadingState) {
+            loadingState.onSuccess();
+        }
     }
 
     const onGetLinks = async () => {
@@ -63,6 +99,7 @@ export const useLinks = ({ SITE_URL }) => {
     }
 
     return {
+        urlError,
         links,
         redirectLink,
         onGetLinks,

@@ -63,6 +63,8 @@
                             inputName="url"
                             inputLabel="Url"
                             inputPlaceholder=" "
+                            errorMessage="Veuillez saisir une url valide."
+                            v-model:inputError="urlError"
                           />
 
                           <div class="flex-shrink-0 px-4 py-4 flex justify-end">
@@ -107,7 +109,17 @@ import { XIcon } from "@heroicons/vue/outline/index.js";
 
 const { SITE_URL } = useRuntimeConfig();
 
-const { onCreateLink } = useLinks({ SITE_URL });
+const loadingState = useLoadingState();
+
+const { loading } = loadingState;
+
+const { urlError, onCreateLink } = useLinks({ SITE_URL }, loadingState);
+
+watch(loading, (value) => {
+  if (value == 2) {
+    open.value = false;
+  }
+});
 
 const props = defineProps({
   open: {
