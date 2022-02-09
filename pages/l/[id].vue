@@ -17,6 +17,12 @@
             >
               Atrap.io
             </p>
+            <p v-if="devMode" class="mt-2 text-sm italic text-gray-600">
+              Redirection en cours...
+            </p>
+            <p v-if="devMode" class="mt-2 text-sm italic text-gray-600">
+              Redirect to : {{ redirectLink }}
+            </p>
           </div>
         </div>
       </main>
@@ -25,5 +31,19 @@
 </template>
 
 <script setup>
-useShortUrl();
+const { SITE_URL } = useRuntimeConfig();
+
+const { onRedirect, redirectLink } = useLinks({ SITE_URL });
+
+const devMode = ref(process.env.NODE_ENV === "development");
+
+onMounted(() => {
+  onRedirect();
+});
+
+watch(redirectLink, (value) => {
+  if (!devMode.value) {
+    window.location.href = value;
+  }
+});
 </script>

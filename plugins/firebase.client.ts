@@ -3,11 +3,12 @@ import { useFirebase } from '~~/composables/useFirebase';
 import ProjectRepository from '~~/repositories/ProjectRepository';
 import TweetRepository from '~~/repositories/TweetRepository';
 import UserRepository from '~~/repositories/UserRepository';
+import LinkRepository from '../repositories/LinkRepository';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const router = useRouter();
 
-  const { auth, firestore } = useFirebase();
+  const { auth, firestore, functions } = useFirebase();
 
   const userRepository = new UserRepository(auth);
   useState('userRepository', () => userRepository);
@@ -17,6 +18,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const tweetRepository = new TweetRepository(firestore, auth);
   useState('tweetRepository', () => tweetRepository);
+
+  const linkRepository = new LinkRepository(auth, functions, firestore);
+  useState('linkRepository', () => linkRepository);
 
   const user = await userRepository.getCurrentUser();
 

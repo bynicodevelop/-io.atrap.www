@@ -42,51 +42,51 @@ useMeta({
       content: description,
     },
     {
-      name: "twitter:card",
+      property: "twitter:card",
       content: "summary_large_image",
     },
     {
-      name: "twitter:site",
+      property: "twitter:site",
       content: `@${twitterAuthor}`,
     },
     {
-      name: "twitter:creator",
+      property: "twitter:creator",
       content: `@${twitterAuthor}`,
     },
     {
-      name: "twitter:title",
+      property: "twitter:title",
       content: title,
     },
     {
-      name: "twitter:description",
+      property: "twitter:description",
       content: description,
     },
     {
-      name: "twitter:image",
+      property: "twitter:image",
       content: image,
     },
     {
-      name: "og:title",
+      property: "og:title",
       content: title,
     },
     {
-      name: "og:description",
+      property: "og:description",
       content: description,
     },
     {
-      name: "og:image",
+      property: "og:image",
       content: image,
     },
     {
-      name: "og:url",
+      property: "og:url",
       content: siteUrl,
     },
     {
-      name: "og:site_name",
+      property: "og:site_name",
       content: siteName,
     },
     {
-      name: "og:type",
+      property: "og:type",
       content: "website",
     },
   ],

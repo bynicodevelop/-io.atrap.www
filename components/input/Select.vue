@@ -3,43 +3,44 @@
     <label
       v-if="props.inputLabel"
       for="project-name"
-      :class="`block text-sm font-medium text-gray-900 ${
+      :class="`block text-sm font-medium text-gray-700 ${
         props.inputError ? 'text-red-600' : ''
       }`"
     >
       {{ props.inputLabel }}
     </label>
     <div class="mt-1">
-      <input
-        @focus="onFocus"
-        @blur="onBlur"
+      <select
         v-model="valueModel"
         :placeholder="props.inputPlaceholder || props.inputLabel"
-        :type="props.inputType"
         :name="props.inputName"
         :id="props.inputId || props.inputName"
         :class="`block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md ${
           props.inputError ? 'border-red-300 text-red-900' : ''
         }`"
-      />
-      <p
-        v-if="!props.inputError && props.helpMessage"
-        class="mt-2 text-sm text-gray-500"
       >
-        {{ props.helpMessage }}
-      </p>
-      <p v-if="props.inputError" class="mt-2 text-sm text-red-600">
-        {{ props.errorMessage }}
-      </p>
+        <option v-for="item in props.items" :key="item.value" :value="item">
+          {{ item.label }}
+        </option>
+      </select>
     </div>
+    <p
+      v-if="!props.inputError && props.helpMessage"
+      class="mt-2 text-sm text-gray-500"
+    >
+      {{ props.helpMessage }}
+    </p>
+    <p v-if="props.inputError" class="mt-2 text-sm text-red-600">
+      {{ props.errorMessage }}
+    </p>
   </div>
 </template>
 
 <script setup>
 const props = defineProps({
   modelValue: {
-    type: String,
-    default: "",
+    type: Object,
+    default: {},
     required: true,
   },
   inputPlaceholder: {
@@ -75,6 +76,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  items: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 const isStated = ref(false);
@@ -86,17 +91,18 @@ const valueModel = computed({
     return props.modelValue;
   },
   set(val) {
+    console.log(val);
     emits("update:modelValue", val);
   },
 });
 
-const onBlur = () => {
-  emits("update:inputError", false);
-};
+// const onBlur = () => {
+//   emits("update:inputError", false);
+// };
 
-const onFocus = () => {
-  isStated.value = true;
+// const onFocus = () => {
+//   isStated.value = true;
 
-  emits("update:inputError", false);
-};
+//   emits("update:inputError", false);
+// };
 </script>
