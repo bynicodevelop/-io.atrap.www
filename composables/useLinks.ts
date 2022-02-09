@@ -52,7 +52,6 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
             });
         } else {
             await linkRepository.updateLink(route.params.projectid, linkData.id, { ...linkData });
-
         }
 
         if (loadingState) {
@@ -60,11 +59,36 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
         }
     }
 
+    const onResetClick = async (linkData) => {
+        if (isEmpty(linkData.id)) return;
+
+        if (loadingState) {
+            loadingState.onStart();
+        }
+
+        await linkRepository.resetClick(route.params.projectid, linkData.id);
+
+
+        if (loadingState) {
+            loadingState.onSuccess();
+        }
+    }
+
     const onGetLinks = async () => {
+        if (loadingState) {
+            loadingState.onStart();
+        }
+
         linkRepository.getLinks(route.params.projectid, (data) => {
             links.value = data
+
+            if (loadingState) {
+                loadingState.onSuccess();
+            }
         })
     }
+
+
 
     const onRedirect = async () => {
         const linkData = await linkRepository.getLinkById(route.params.id);
@@ -114,5 +138,6 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
         onRedirect,
         onCopyLink,
         onCreateLink,
+        onResetClick,
     }
 }

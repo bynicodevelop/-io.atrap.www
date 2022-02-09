@@ -21,7 +21,8 @@ export default class LinkRepository {
         utm_medium = '',
         utm_campaign = '',
     }: any) {
-        const data = await httpsCallable(this.functions, 'onGenerateLinkId')({
+        // TODO: Attention s'il y a un exception, on ne fait rien
+        await httpsCallable(this.functions, 'onGenerateLinkId')({
             url,
             title,
             utm_source,
@@ -30,8 +31,6 @@ export default class LinkRepository {
             projectId,
             userId: this.auth.currentUser.uid,
         });
-
-        console.log(data);
     }
 
     async updateLink(projectId: string, linkId: string, {
@@ -40,6 +39,12 @@ export default class LinkRepository {
         const linkDoc: DocumentReference = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/links/${linkId}`);
 
         await updateDoc(linkDoc, { title })
+    }
+
+    async resetClick(projectId: string, linkId: string) {
+        const linkDoc: DocumentReference = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/links/${linkId}`);
+
+        await updateDoc(linkDoc, { clicks: 0 })
     }
 
     async getLinks(projectId: string, cb: Function) {
@@ -54,6 +59,8 @@ export default class LinkRepository {
 
     async getLinkById(linkId: string): Promise<any | null> {
         const docRef: DocumentReference = doc(this.firestore, `links/${linkId}`);
+
+        console.log("Add click to", `links/${linkId}`);
 
         const link = await getDoc(docRef);
 
