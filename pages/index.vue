@@ -506,21 +506,16 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline/index.js";
 import * as yup from "yup";
-
 const schema = yup.object().shape({
   email: yup.string().email().required(),
 });
-
 const navigation = [
   { name: "Présentation", href: "#getting-started" },
   { name: "S'inscrire", href: "#register" },
   { name: "UTM Generateur", href: "/generator/utm" },
 ];
-
 const { isAuthenticated, isLogin } = useLogin();
-
 const { onSuccess } = useNotification();
-
 const {
   email,
   emailError,
@@ -531,6 +526,5 @@ const {
   onSubmit,
   scrollToElement,
 } = useNewsletter({ onSuccess });
-
 onMounted(async () => await isLogin());
 </script>
