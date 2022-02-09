@@ -2,6 +2,7 @@ import { defineNuxtConfig } from 'nuxt3'
 
 export default defineNuxtConfig({
   srcDir: './',
+  ssr: true,
   css: [
     '@/assets/css/main.css',
     '~/node_modules/vue3-date-time-picker/dist/main.css'

@@ -1,5 +1,4 @@
 import { isEmpty } from "lodash";
-import { useNuxtApp, useRuntimeConfig } from "nuxt3";
 import LinkRepository from "../repositories/LinkRepository";
 
 import * as yup from "yup";
@@ -7,6 +6,32 @@ import * as yup from "yup";
 const schema = yup.object().shape({
     url: yup.string().url("url_field").required("url_field"),
 });
+
+const isBotUserAgent = (userAgent) => {
+    const userAgents = [
+        "facebookexternalhit",
+        "Facebot",
+        "Googlebot",
+        "google.com/bot",
+        "Google-PageRenderer",
+        "SerendeputyBot",
+        "Twitterbot",
+        "Slackbot-LinkExpanding",
+        "LivelapBot",
+        "okhttp",
+    ];
+
+    let result = false;
+
+    userAgents.forEach((userAgentString) => {
+        if (userAgent.includes(userAgentString)) {
+            result = true;
+        }
+    });
+
+    return result;
+};
+
 
 export const useLinks = ({ SITE_URL }, loadingState = null) => {
     const { onSuccess } = useNotification();
@@ -16,6 +41,8 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
     const links = ref([]);
     const linkSelected = ref({});
     const redirectLink = ref(null);
+    const metadata = ref({});
+    const userAgentType = ref('human');
 
     const urlError = ref(false);
 
@@ -88,13 +115,16 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
         })
     }
 
-
-
     const onRedirect = async () => {
+        const userAgent = window.navigator.userAgent;
         const linkData = await linkRepository.getLinkById(route.params.id);
 
+        userAgentType.value = isBotUserAgent(userAgent) ? 'bot' : 'human';
+
         if (linkData != null) {
-            const { url } = linkData;
+            const { url, seo } = linkData;
+
+            metadata.value = seo
 
             delete linkData['url'];
             delete linkData['title'];
@@ -130,6 +160,8 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
     }
 
     return {
+        userAgentType,
+        metadata,
         urlError,
         links,
         linkSelected,
