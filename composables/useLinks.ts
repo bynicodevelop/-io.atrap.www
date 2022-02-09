@@ -14,6 +14,7 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
     const linkRepository = <LinkRepository>useState('linkRepository').value;
 
     const links = ref([]);
+    const linkSelected = ref({});
     const redirectLink = ref(null);
 
     const urlError = ref(false);
@@ -45,9 +46,14 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
             return;
         }
 
-        await linkRepository.createLink(route.params.projectid, {
-            ...linkData
-        });
+        if (isEmpty(linkData.id)) {
+            await linkRepository.createLink(route.params.projectid, {
+                ...linkData
+            });
+        } else {
+            await linkRepository.updateLink(route.params.projectid, linkData.id, { ...linkData });
+
+        }
 
         if (loadingState) {
             loadingState.onSuccess();
@@ -67,6 +73,7 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
             const { url } = linkData;
 
             delete linkData['url'];
+            delete linkData['title'];
             delete linkData['seo'];
             delete linkData['lastClick'];
 
@@ -101,6 +108,7 @@ export const useLinks = ({ SITE_URL }, loadingState = null) => {
     return {
         urlError,
         links,
+        linkSelected,
         redirectLink,
         onGetLinks,
         onRedirect,

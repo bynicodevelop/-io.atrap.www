@@ -1,7 +1,10 @@
 <template>
   <div>
     <NuxtLayout name="admin">
-      <FormsCreateLink v-model:open="openLinkEditor" />
+      <FormsCreateLink
+        v-model:open="openLinkEditor"
+        v-model:linkData="linkData"
+      />
 
       <div v-if="links.length == 0" class="text-center">
         <LinkIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
@@ -42,9 +45,16 @@
             <li v-for="link in links" :key="link.id">
               <div class="px-4 py-4 sm:px-6">
                 <div class="flex items-center justify-between">
-                  <p class="text-sm text-gray-600 line-clamp-2 truncate">
-                    {{ link.url }}
-                  </p>
+                  <a
+                    @click.prevent="
+                      openLinkEditor = true;
+                      linkData = link;
+                    "
+                    href="#"
+                    class="text-sm text-indigo-600 line-clamp-2 truncate"
+                  >
+                    {{ link.title ?? link.url }}
+                  </a>
 
                   <div class="ml-2 flex-shrink-0 flex">
                     <button
@@ -89,9 +99,18 @@ import {
 
 const { SITE_URL } = useRuntimeConfig();
 
+const linkData = ref({ id: "" });
+const openLinkEditor = ref(false);
+
 const { links, onGetLinks, onCopyLink } = useLinks({ SITE_URL });
 
-const openLinkEditor = ref(false);
+watch(openLinkEditor, (value) => {
+  if (!value) {
+    linkData.value = {
+      id: "",
+    };
+  }
+});
 
 onMounted(() => {
   onGetLinks();

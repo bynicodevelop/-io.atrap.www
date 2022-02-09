@@ -65,6 +65,14 @@
                             inputPlaceholder=" "
                             errorMessage="Veuillez saisir une url valide."
                             v-model:inputError="urlError"
+                            :inputDisabled="linkData.id !== ''"
+                          />
+
+                          <InputText
+                            v-model="linkData.title"
+                            inputName="title"
+                            inputLabel="Titre"
+                            inputPlaceholder=" "
                           />
 
                           <div class="flex-shrink-0 px-4 py-4 flex justify-end">
@@ -107,6 +115,23 @@ import {
 
 import { XIcon } from "@heroicons/vue/outline/index.js";
 
+const fields = {
+  id: "",
+  url: "",
+  title: "",
+};
+
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false,
+  },
+  linkData: {
+    type: Object,
+    default: {},
+  },
+});
+
 const { SITE_URL } = useRuntimeConfig();
 
 const loadingState = useLoadingState();
@@ -115,23 +140,15 @@ const { loading } = loadingState;
 
 const { urlError, onCreateLink } = useLinks({ SITE_URL }, loadingState);
 
-watch(loading, (value) => {
-  if (value == 2) {
-    open.value = false;
-  }
-});
+const emits = defineEmits("update:open", "update:linkData");
 
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false,
+const linkData = computed({
+  get() {
+    return props.linkData;
   },
-});
-
-const emits = defineEmits("update:open");
-
-const linkData = reactive({
-  url: "",
+  set(value) {
+    emits("update:linkData", value);
+  },
 });
 
 const open = computed({
@@ -143,14 +160,13 @@ const open = computed({
   },
 });
 
+watch(loading, (value) => {
+  if (value == 2) {
+    open.value = false;
+  }
+});
+
 const advancedMode = ref(false);
-
-const url = ref("");
-const utmSource = ref({});
-const utmMedium = ref({});
-const utmCampaign = ref("");
-
-const resultValue = ref("");
 
 const itemsSource = [
   {
@@ -253,8 +269,4 @@ const itemsMedium = [
     label: "Click",
   },
 ];
-
-watch(url, (value) => {
-  resultValue.value = value;
-});
 </script>

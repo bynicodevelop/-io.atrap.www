@@ -14,12 +14,19 @@
         @focus="onFocus"
         @blur="onBlur"
         v-model="valueModel"
+        :disabled="props.inputDisabled"
         :placeholder="props.inputPlaceholder || props.inputLabel"
         :type="props.inputType"
         :name="props.inputName"
         :id="props.inputId || props.inputName"
-        :class="`block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md ${
-          props.inputError ? 'border-red-300 text-red-900' : ''
+        :class="`block w-full shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm border-gray-300 rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500 ${
+        props.inputError ? 'border-red-300 text-red-900' : ''
+      } ${
+          props.inputDisabled
+            ? 'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500'
+            : ''
         }`"
       />
       <p
@@ -36,6 +43,8 @@
 </template>
 
 <script setup>
+import { boolean } from "mathjs";
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -74,6 +83,10 @@ const props = defineProps({
   inputId: {
     type: String,
     default: "",
+  },
+  inputDisabled: {
+    type: Boolean,
+    default: false,
   },
 });
 

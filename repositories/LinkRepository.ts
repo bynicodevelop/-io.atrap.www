@@ -1,5 +1,5 @@
 import { Auth } from "firebase/auth";
-import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, getDoc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, CollectionReference, doc, DocumentReference, Firestore, getDoc, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { Functions, httpsCallable } from "firebase/functions";
 
 export default class LinkRepository {
@@ -16,12 +16,14 @@ export default class LinkRepository {
     }
 
     async createLink(projectId: string, { url,
+        title = '',
         utm_source = '',
         utm_medium = '',
         utm_campaign = '',
     }: any) {
         const data = await httpsCallable(this.functions, 'onGenerateLinkId')({
             url,
+            title,
             utm_source,
             utm_medium,
             utm_campaign,
@@ -30,6 +32,14 @@ export default class LinkRepository {
         });
 
         console.log(data);
+    }
+
+    async updateLink(projectId: string, linkId: string, {
+        title = '',
+    }: any) {
+        const linkDoc: DocumentReference = doc(this.firestore, `users/${this.auth.currentUser.uid}/projects/${projectId}/links/${linkId}`);
+
+        await updateDoc(linkDoc, { title })
     }
 
     async getLinks(projectId: string, cb: Function) {
